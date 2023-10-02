@@ -3,6 +3,8 @@ import { useStore } from '../stores'
 import { storeToRefs } from 'pinia'
 import dataPicker from './dataPicker.vue'
 import { computed, ref } from 'vue'
+import { useDark } from '@vueuse/core'
+const isDark = useDark()
 const store = useStore()
 const { activityList,isLoading } = storeToRefs(store)
 
@@ -25,7 +27,7 @@ function updateDate (startdate,enddate) {
   <dataPicker @change-date="updateDate" />
 
   <div class="min-h-[80vh] md:mx-10 lg:mx-16">
-    <el-table :data="result" stripe v-loading="isLoading">
+    <el-table :data="result" :stripe="!isDark" v-loading="isLoading">
       <el-table-column type="expand" width="30">
         <template #default="{row}">
           <div class="ml-10 mr-2">
