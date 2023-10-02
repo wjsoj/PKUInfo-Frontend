@@ -3,18 +3,25 @@ import { useStore } from '../stores'
 import { storeToRefs } from 'pinia'
 import dataPicker from './dataPicker.vue'
 import timeLineItem from './timeLineItem.vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const store = useStore()
-const { activityList,result } = storeToRefs(store)
+const { activityList } = storeToRefs(store)
 
-function updateDate (startDate,endDate) {
-  endDate.setHours(23,59,59)
-  result.value = activityList.value.filter(activity => {
-    let activityDate = new Date(activity.startDate)
-    return activityDate.getTime() >= startDate.getTime() && activityDate.getTime() <= endDate.getTime()
-  })
+let startDate = ref(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()))
+let endDate = ref(new Date(new Date().getFullYear(), new Date().getMonth() , new Date().getDate() + 30, 23, 59, 59))
+
+const result = computed(() => activityList.value.filter(activity => {
+  let activityDate = new Date(activity.startDate)
+  return activityDate.getTime() >= startDate.value.getTime() && activityDate.getTime() <= endDate.value.getTime()
+}))
+
+function updateDate (startdate,enddate) {
+  enddate.setHours(23,59,59)
+  startDate.value = startdate
+  endDate.value = enddate
 }
+
 const groupByDate = computed(() => {
   let group = {}
   result.value.forEach(activity => {

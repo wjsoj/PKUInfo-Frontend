@@ -4,8 +4,8 @@ import { ref,watch } from 'vue'
 let emit = defineEmits(['changeDate'])
 
 let startDate = ref(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()))
-// endDate为下个月的同一天晚上23:59:59
-let endDate = ref(new Date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate() - 1, 23, 59, 59))
+// endDate为30天后的晚上23:59:59
+let endDate = ref(new Date(new Date().getFullYear(), new Date().getMonth() , new Date().getDate() + 30, 23, 59, 59))
 
 const disabledStartDate = (time) => {
   // time小于30天前的日期
