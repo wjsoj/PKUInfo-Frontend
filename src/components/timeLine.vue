@@ -11,9 +11,12 @@ const { activityList } = storeToRefs(store)
 let startDate = ref(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()))
 let endDate = ref(new Date(new Date().getFullYear(), new Date().getMonth() , new Date().getDate() + 30, 23, 59, 59))
 
+// 筛选并按照时间排序
 const result = computed(() => activityList.value.filter(activity => {
   let activityDate = new Date(activity.startDate)
   return activityDate.getTime() >= startDate.value.getTime() && activityDate.getTime() <= endDate.value.getTime()
+}).sort((a,b) => {
+  return new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
 }))
 
 function updateDate (startdate,enddate) {

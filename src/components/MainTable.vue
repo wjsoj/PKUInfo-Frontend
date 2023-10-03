@@ -14,6 +14,8 @@ let endDate = ref(new Date(new Date().getFullYear(), new Date().getMonth() , new
 const result = computed(() => activityList.value.filter(activity => {
   let activityDate = new Date(activity.startDate)
   return activityDate.getTime() >= startDate.value.getTime() && activityDate.getTime() <= endDate.value.getTime()
+}).sort((a,b) => {
+  return new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
 }))
 
 function updateDate (startdate,enddate) {
