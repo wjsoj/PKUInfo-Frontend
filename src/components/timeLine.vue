@@ -3,7 +3,7 @@ import { useStore } from '../stores'
 import { storeToRefs } from 'pinia'
 import dataPicker from './dataPicker.vue'
 import timeLineItem from './timeLineItem.vue'
-import { computed, ref } from 'vue'
+import { computed, ref, onUpdated } from 'vue'
 
 const store = useStore()
 const { activityList } = storeToRefs(store)
@@ -36,6 +36,18 @@ const groupByDate = computed(() => {
     }
   })
   return group
+})
+
+// 监听窗口内容变化，如果窗口内容高度不足窗口高度，将footer固定在底部
+onUpdated(() => {
+  const footer = document.querySelector('footer')
+  const footerHeight = footer.offsetHeight
+  const windowHeight = window.innerHeight
+  if (footerHeight < windowHeight) {
+    footer.classList.add('fixed')
+  } else {
+    footer.classList.remove('fixed')
+  }
 })
 </script>
 
