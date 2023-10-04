@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainView from '../views/MainView.vue'
-import submitLink from '../components/submitLink.vue'
+// import submitLink from '../components/submitLink.vue'
 import CalendarView from '../views/CalendarView.vue'
 
 const router = createRouter({
@@ -11,11 +11,11 @@ const router = createRouter({
       name: 'home',
       component: MainView
     },
-    {
-      path: '/submit',
-      name: 'submit',
-      component: submitLink
-    },
+    // {
+    //   path: '/submit',
+    //   name: 'submit',
+    //   component: submitLink
+    // },
     {
       path: '/calendar',
       name: 'calendar',

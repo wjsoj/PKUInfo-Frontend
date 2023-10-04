@@ -37,7 +37,7 @@ function goToUrl (url) {
         <el-tabs v-model="activeName" @tab-change="handleChange">
         <el-tab-pane label="活动列表" name="first" />
         <el-tab-pane label="活动日历" name="second" />
-        <el-tab-pane label="提交链接" name="third" />
+        <!-- <el-tab-pane label="提交链接" name="third" /> -->
       </el-tabs>
       </div>
       <div @click="toggleDark()" class="mr-2 text-3xl">
@@ -54,7 +54,7 @@ function goToUrl (url) {
     <el-tabs v-model="activeName" :stretch="true" @tab-change="handleChange">
       <el-tab-pane label="活动列表" name="first" />
       <el-tab-pane label="活动日历" name="second" />
-      <el-tab-pane label="提交链接" name="third" />
+      <!-- <el-tab-pane label="提交链接" name="third" /> -->
     </el-tabs>
   </div>
 </div>

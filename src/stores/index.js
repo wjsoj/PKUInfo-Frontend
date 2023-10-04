@@ -40,6 +40,7 @@ export const useStore = defineStore('store', () => {
       activityList.value = res.data.data
     }).catch(err => {
       console.log(err)
+      alert(err)
     })
     activityList.value.sort((a, b) => {
       if (a.startDate !== b.startDate) {
