@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { request } from '@/utils/request'
+import { ElMessage } from 'element-plus'
 
 export const useStore = defineStore('store', () => {
   const activityList = ref([])
@@ -40,10 +41,14 @@ export const useStore = defineStore('store', () => {
       activityList.value = res.data.data
     }).catch(err => {
       console.log(err)
-      alert(err.code + 'A' + err.name + 'B' + err.message)
-      if ('AxiosError' in err ) {
+      if ('AxiosError' === err.name ) {
+        ElMessage.warning("检测到http访问，正在强行跳转")
         // 将当前网页替换为'https://pkuinfo.lcpu.dev'
-        window.location.replace('https://pkuinfo.lcpu.dev')
+        setTimeout(() => {
+          window.location.replace('https://pkuinfo.lcpu.dev')
+        }, 1000);
+      } else {
+        alert("初始化数据失败，请检查连接")
       }
     })
     activityList.value.sort((a, b) => {
