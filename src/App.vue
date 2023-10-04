@@ -15,7 +15,11 @@ onMounted(() => {
     <navBar />
   </header>
   <main>
-    <RouterView />
+    <router-view v-slot="{ Component }">
+      <transition name="fade">
+        <component :is="Component"/>
+      </transition>
+    </router-view>
   </main>
   <footer class="bottom-0 w-full">
     <footerBar />

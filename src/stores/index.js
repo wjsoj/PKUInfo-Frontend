@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { request } from '@/utils/request'
 import { ElMessage } from 'element-plus'
@@ -6,6 +6,10 @@ import { ElMessage } from 'element-plus'
 export const useStore = defineStore('store', () => {
   const activityList = ref([])
   const isLoading = ref(false)
+  const isBackLoading = ref(false)
+  const loadingCombine = computed(() => {
+    return isLoading.value || isBackLoading.value
+  })
 
   function concatArray(arr1, arr2) {
     // 排序
@@ -25,12 +29,19 @@ export const useStore = defineStore('store', () => {
   }
 
   async function fetchData(param) {
-    await request.get('/user/activity/' + param).then(res => {
-      concatArray(activityList.value, res.data.data)
-      console.log('fetchData '+param)
-    }).catch(err => {
+    isBackLoading.value = true
+    const [data1, data2, data3] = await Promise.all([
+      request.get('/user/activity/' + param[0]),
+      request.get('/user/activity/' + param[1]),
+      request.get('/user/activity/' + param[2])
+    ]).catch(err => {
       console.log(err)
+      ElMessage.error("后台获取数据失败")
     })
+    concatArray(activityList.value, data1.data.data)
+    concatArray(activityList.value, data2.data.data)
+    concatArray(activityList.value, data3.data.data)
+    isBackLoading.value = false
   }
   async function initFetchData() {
     isLoading.value = true
@@ -62,18 +73,18 @@ export const useStore = defineStore('store', () => {
     const date = new Date()
     date.setDate(date.getDate() - 30)
     const lastMonth = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-    fetchData(lastMonth)
     // 构造30天后的日期
     const date1 = new Date()
     date1.setDate(date1.getDate() + 30)
     const nextMonth = date1.getFullYear() + '-' + (date1.getMonth() + 1) + '-' + date1.getDate()
-    fetchData(nextMonth)
     // 构造60天后的日期
     const date2 = new Date()
     date2.setDate(date2.getDate() + 60)
     const nextMonth1 = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
-    fetchData(nextMonth1)
+    // 形成数组传入fetchdata
+    const dateArray = [lastMonth, nextMonth, nextMonth1]
+    fetchData(dateArray)
     isLoading.value = false
   }
-  return { activityList,isLoading,initFetchData }
+  return { activityList,isLoading,loadingCombine,initFetchData }
 })

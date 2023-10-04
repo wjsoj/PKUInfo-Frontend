@@ -5,7 +5,7 @@ import calendarCell from './calendarCell.vue'
 import { onUpdated } from 'vue';
 
 const store = useStore()
-const { activityList } = storeToRefs(store)
+const { loadingCombine,activityList } = storeToRefs(store)
 
 function isInRange(dayString) {
   const day = new Date(dayString)
@@ -37,7 +37,7 @@ onUpdated(() => {
 
 <template>
   <div class="min-h-[80vh] mx-10 my-6">
-    <el-calendar>
+    <el-calendar v-loading="loadingCombine">
       <template #date-cell="{ data }">
           <calendar-cell :activities="getActivitiesByDate(data.day)" :day="data.day"/>
       </template>
