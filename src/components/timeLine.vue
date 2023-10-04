@@ -40,20 +40,17 @@ const groupByDate = computed(() => {
 
 // 监听窗口内容变化，如果窗口内容高度不足窗口高度，将footer固定在底部
 onUpdated(() => {
-  const footer = document.querySelector('footer')
-  const footerHeight = footer.offsetHeight
-  const windowHeight = window.innerHeight
-  if (footerHeight < windowHeight) {
+  let footer = document.querySelector('footer')
+  footer.classList.remove('fixed')
+  if (document.body.clientHeight < window.innerHeight) {
     footer.classList.add('fixed')
-  } else {
-    footer.classList.remove('fixed')
   }
 })
 </script>
 
 <template>
   <dataPicker @change-date="updateDate"/>
-  <div class="ml-2 mr-4">
+  <div class="ml-2 mr-4 mt-5">
     <el-timeline>
       <!-- 遍历groupByDate -->
       <el-timeline-item
@@ -76,7 +73,7 @@ onUpdated(() => {
       </el-timeline-item>
     </el-timeline>
   </div>
-  <h1 class="text-base text-center my-1">共{{ result.length }}条</h1>
+  <h1 class="text-base text-center my-3">共{{ result.length }}条</h1>
 
   <el-backtop :right="20" :bottom="70" />
 </template>

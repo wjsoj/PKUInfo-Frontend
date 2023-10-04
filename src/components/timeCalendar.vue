@@ -24,13 +24,10 @@ function getActivitiesByDate (date) {
 
 // 监听窗口内容变化，如果窗口内容高度不足窗口高度，将footer固定在底部
 onUpdated(() => {
-  const footer = document.querySelector('footer')
-  const footerHeight = footer.offsetHeight
-  const windowHeight = window.innerHeight
-  if (footerHeight < windowHeight) {
+  let footer = document.querySelector('footer')
+  footer.classList.remove('fixed')
+  if (document.body.clientHeight < window.innerHeight) {
     footer.classList.add('fixed')
-  } else {
-    footer.classList.remove('fixed')
   }
 })
 </script>

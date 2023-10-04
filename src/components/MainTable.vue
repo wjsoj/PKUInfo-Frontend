@@ -2,7 +2,7 @@
 import { useStore } from '../stores'
 import { storeToRefs } from 'pinia'
 import dataPicker from './dataPicker.vue'
-import { computed, ref } from 'vue'
+import { computed, ref, onUpdated } from 'vue'
 import { useDark } from '@vueuse/core'
 const isDark = useDark()
 const store = useStore()
@@ -23,12 +23,21 @@ function updateDate (startdate,enddate) {
   startDate.value = startdate
   endDate.value = enddate
 }
+
+// 监听窗口内容变化，如果窗口内容高度不足窗口高度，将footer固定在底部
+onUpdated(() => {
+  let footer = document.querySelector('footer')
+  footer.classList.remove('fixed')
+  if (document.body.clientHeight < window.innerHeight) {
+    footer.classList.add('fixed')
+  }
+})
 </script>
 
 <template>
   <dataPicker @change-date="updateDate" />
 
-  <div class="min-h-[80vh] md:mx-10 lg:mx-16">
+  <div class="md:mx-10 lg:mx-16">
     <el-table :data="result" :stripe="!isDark" v-loading="isLoading">
       <el-table-column type="expand" width="30">
         <template #default="{row}">
@@ -49,7 +58,7 @@ function updateDate (startdate,enddate) {
     </el-table>
   </div>
 
-  <h1 class="text-base text-center my-2 md:my-4">共{{ result.length }}条</h1>
+  <h1 class="text-base text-center my-2 md:my-4" v-if="!isLoading">共{{ result.length }}条</h1>
   <div class="md:hidden">
     <el-backtop :right="20" :bottom="70" />
   </div>

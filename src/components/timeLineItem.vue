@@ -23,9 +23,16 @@ function goToUrl (url) {
     <el-dialog v-model="dialogVisible" title="活动详情" width="80%" align-center>
       <div class="flex flex-col justify-center items-start">
         <h2 class="font-semibold text-lg my-2">{{ activity.title }}</h2>
-        <p v-if="activity.address" class="my-1">活动地点：{{ activity.address }}</p>
-        <p v-if="activity.college" class="my-1">举办院系：{{ activity.college }}</p>
-        <p class="my-1">{{ activity.description }}</p>
+        <p v-if="activity.address" class="my-1 flex">
+          <span class="shrink-0">活动地点：</span>
+          <span>{{ activity.address }}</span>
+        </p>
+        <p v-if="activity.college" class="my-1 flex">
+          <span class="shrink-0">举办院系：</span>
+          <span >{{ activity.college }}</span>
+        </p>
+        <p class="my-1">
+          {{ activity.description }}</p>
         <el-button type="primary" plain @click="goToUrl(activity.accountLink)" class=" self-center mt-5">查看推送</el-button>
       </div>
     </el-dialog>

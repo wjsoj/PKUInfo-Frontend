@@ -3,5 +3,7 @@ import MainTable from '../components/MainTable.vue'
 </script>
 
 <template>
-  <MainTable />
+  <div>
+    <MainTable />
+  </div>
 </template>

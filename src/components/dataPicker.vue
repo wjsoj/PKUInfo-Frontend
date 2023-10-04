@@ -34,8 +34,8 @@ watch ([startDate,endDate], () => {
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row md:justify-center items-center md:my-4 lg:my-8" v-loading="loadingCombine">
-    <div class="flex flex-row my-2 mx-4">
+  <div class="flex flex-col md:flex-row md:justify-center items-center my-2 md:my-4 lg:my-8" v-loading="loadingCombine">
+    <div class="flex flex-row my-2 mx-4 items-center">
       <p class="mr-3 md:text-lg">开始日期：</p>
       <el-date-picker
         v-model="startDate"
@@ -44,7 +44,7 @@ watch ([startDate,endDate], () => {
         :disabled-date="disabledStartDate"
       />
     </div>
-    <div class="flex flex-row my-2 mx-4">
+    <div class="flex flex-row my-2 mx-4 items-center">
       <p class="mr-3 md:text-lg">结束日期：</p>
       <el-date-picker
         v-model="endDate"

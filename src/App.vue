@@ -21,7 +21,7 @@ onMounted(() => {
       </transition>
     </router-view>
   </main>
-  <footer class="bottom-0 w-full">
+  <footer class="fixed bottom-0 w-full">
     <footerBar />
   </footer>
 </template>
