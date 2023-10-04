@@ -2,7 +2,7 @@
 import { useStore } from '../stores'
 import { storeToRefs } from 'pinia'
 import calendarCell from './calendarCell.vue'
-import { onUpdated } from 'vue';
+import { onUpdated, onMounted } from 'vue';
 
 const store = useStore()
 const { loadingCombine,activityList } = storeToRefs(store)
@@ -24,6 +24,14 @@ function getActivitiesByDate (date) {
 
 // 监听窗口内容变化，如果窗口内容高度不足窗口高度，将footer固定在底部
 onUpdated(() => {
+  let footer = document.querySelector('footer')
+  footer.classList.remove('fixed')
+  if (document.body.clientHeight < window.innerHeight) {
+    footer.classList.add('fixed')
+  }
+})
+
+onMounted(() => {
   let footer = document.querySelector('footer')
   footer.classList.remove('fixed')
   if (document.body.clientHeight < window.innerHeight) {

@@ -2,7 +2,7 @@
 import { useStore } from '../stores'
 import { storeToRefs } from 'pinia'
 import dataPicker from './dataPicker.vue'
-import { computed, ref, onUpdated } from 'vue'
+import { computed, ref, onUpdated, onMounted } from 'vue'
 import { useDark } from '@vueuse/core'
 const isDark = useDark()
 const store = useStore()
@@ -23,6 +23,14 @@ function updateDate (startdate,enddate) {
   startDate.value = startdate
   endDate.value = enddate
 }
+
+onMounted(() => {
+  let footer = document.querySelector('footer')
+  footer.classList.remove('fixed')
+  if (document.body.clientHeight < window.innerHeight) {
+    footer.classList.add('fixed')
+  }
+})
 
 // 监听窗口内容变化，如果窗口内容高度不足窗口高度，将footer固定在底部
 onUpdated(() => {
