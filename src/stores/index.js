@@ -40,7 +40,10 @@ export const useStore = defineStore('store', () => {
       activityList.value = res.data.data
     }).catch(err => {
       console.log(err)
-      alert(err)
+      if ('AxiosError' in err ) {
+        // 将当前网页替换为'https://pkuinfo.lcpu.dev'
+        window.location.replace('https://pkuinfo.lcpu.dev')
+      }
     })
     activityList.value.sort((a, b) => {
       if (a.startDate !== b.startDate) {
