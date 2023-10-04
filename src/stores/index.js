@@ -40,6 +40,7 @@ export const useStore = defineStore('store', () => {
       activityList.value = res.data.data
     }).catch(err => {
       console.log(err)
+      alert(err.code + 'A' + err.name + 'B' + err.message)
       if ('AxiosError' in err ) {
         // 将当前网页替换为'https://pkuinfo.lcpu.dev'
         window.location.replace('https://pkuinfo.lcpu.dev')
