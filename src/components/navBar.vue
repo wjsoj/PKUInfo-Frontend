@@ -15,11 +15,11 @@ const toggleDark = useToggle(isDark)
 
 const handleChange = (name) => {
   if (name === 'first') {
-    router.push('/')
+    router.replace('/')
   } else if (name === 'second') {
-    router.push('/calendar')
+    router.replace('/calendar')
   } else if (name === 'third') {
-    router.push('/submit')
+    router.replace('/submit')
   }
 }
 
