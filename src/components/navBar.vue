@@ -35,11 +35,24 @@ function goToUrl (url) {
     <div class="flex flex-row items-center">
       <div class="flex-row mr-10 mt-2 hidden md:flex">
         <el-tabs v-model="activeName" @tab-change="handleChange">
-        <el-tab-pane label="活动列表" name="first" />
-        <el-tab-pane label="活动日历" name="second" />
+        <el-tab-pane label="活动列表" name="first" >
+          <template #label>
+            <span class="text-lg px-2 py-2">
+              活动列表
+            </span>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane label="活动日历" name="second" >
+          <template #label>
+            <span class="text-lg px-2 py-2">
+              活动日历
+            </span>
+          </template>
+        </el-tab-pane>
         <!-- <el-tab-pane label="提交链接" name="third" /> -->
       </el-tabs>
       </div>
+
       <div @click="toggleDark()" class="mr-2 text-3xl cursor-pointer">
         <Sunny v-if="isDark" style="width: 1em; height: 1em;"/>
         <Moon v-else style="width: 1em; height: 1em;"/>
@@ -58,5 +71,6 @@ function goToUrl (url) {
     </el-tabs>
   </div>
 </div>
-  
+
+
 </template>

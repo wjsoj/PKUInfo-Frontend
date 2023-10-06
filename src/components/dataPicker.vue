@@ -1,9 +1,5 @@
 <script setup>
 import { ref,watch } from 'vue'
-import { useStore } from '../stores'
-import { storeToRefs } from 'pinia'
-const store = useStore()
-const { loadingCombine } = storeToRefs(store)
 
 let emit = defineEmits(['changeDate'])
 
@@ -34,9 +30,9 @@ watch ([startDate,endDate], () => {
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row md:justify-center items-center my-2 md:my-4 lg:my-8" v-loading="loadingCombine">
+  <div class="flex flex-col md:flex-row md:justify-center items-center my-2 md:my-4 lg:my-8">
     <div class="flex flex-row my-2 mx-4 items-center">
-      <p class="mr-3 md:text-lg">开始日期：</p>
+      <p class="mr-3 md:text-lg shrink-0">开始日期：</p>
       <el-date-picker
         v-model="startDate"
         type="date"
@@ -45,7 +41,7 @@ watch ([startDate,endDate], () => {
       />
     </div>
     <div class="flex flex-row my-2 mx-4 items-center">
-      <p class="mr-3 md:text-lg">结束日期：</p>
+      <p class="mr-3 md:text-lg shrink-0">结束日期：</p>
       <el-date-picker
         v-model="endDate"
         type="date"

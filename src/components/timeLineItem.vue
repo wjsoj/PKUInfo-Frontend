@@ -28,7 +28,7 @@ function goToUrl (url) {
           <span>{{ activity.address }}</span>
         </p>
         <p v-if="activity.college" class="my-1 flex">
-          <span class="shrink-0">举办院系：</span>
+          <span class="shrink-0">举办单位：</span>
           <span >{{ activity.college }}</span>
         </p>
         <p class="my-1">
