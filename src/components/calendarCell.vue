@@ -31,7 +31,7 @@ let { activities, day } = defineProps({
         <el-drawer
           v-model="drawer"
           :title="day+'活动列表'"
-          size="70%"
+          size="60%"
         >
           <el-collapse accordion>
             <el-timeline>
@@ -42,9 +42,28 @@ let { activities, day } = defineProps({
               >
                 <el-collapse-item :title="activity.title" :name="activity.id">
                   <!-- 将activity所有字段以key - value的表格形式显示在一起 -->
-                  <div v-for="(value, key) in activity" :key="key" class="grid grid-cols-3">
-                    <p class="font-semibold">{{ key }}：</p>
-                    <p class=" col-span-2">{{ value }}</p>
+                  <div class="grid grid-cols-3">
+
+                    <p class="font-semibold">活动地点：</p>
+                    <p class=" col-span-2">{{ activity.address }}</p>
+
+                    <p class="font-semibold">活动日期：</p>
+                    <p class=" col-span-2" v-if="activity.startTime !== '00:00:00'">{{ activity.startDate }} <span v-if="activity.startDate!==activity.endDate"> - {{ activity.endDate }}</span> {{ activity.startTime }} - {{ activity.endTime }}</p>
+                    <p class=" col-span-2" v-else>{{ activity.startDate }}</p>
+
+                    <p class="font-semibold">举办单位：</p>
+                    <p class=" col-span-2">{{ activity.college }}</p>
+
+                    <p class="font-semibold">活动详情：</p>
+                    <p class=" col-span-2">{{ activity.description }}</p>
+
+                    <p class="font-semibold">原文链接：</p>
+                    <p class=" col-span-2">
+                      <a :href="activity.accountLink" class=" text-sky-800 dark:text-sky-200 hover:text-sky-600 dark:hover:text-sky-400 hover:underline" target="_blank" rel="noopener noreferrer">{{ activity.accountLink }}</a>
+                    </p>
+
+                    <p class="font-semibold">补充信息：</p>
+                    <p class=" col-span-2">{{ activity.extraInfo }}</p>
                   </div>
                 </el-collapse-item>
               </el-timeline-item>

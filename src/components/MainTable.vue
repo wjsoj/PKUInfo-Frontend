@@ -90,9 +90,13 @@ onUpdated(() => {
           <div v-html="highLight(row.title)"></div>
         </template>
       </el-table-column>
-      <el-table-column sortable label="活动日期" min-width="150" >
+      <el-table-column sortable label="活动日期" min-width="100" >
         <template #default="{row}">
-          <span>{{ row.startDate }}  {{ row.startTime }} - {{ row.endTime }}</span>
+          <span v-if="row.startTime !== '00:00:00'">
+            {{ row.startDate }} <span v-if="row.startDate!==row.endDate"> - {{ row.endDate }}</span> <br />
+            {{ row.startTime }} - {{ row.endTime }}
+          </span>
+          <span v-else>{{ row.startDate }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="description" label="活动信息" min-width="360">
