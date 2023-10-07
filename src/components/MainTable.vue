@@ -102,15 +102,19 @@ onUpdated(() => {
       </el-table-column>
     </el-table>
 
-    <div class="flex justify-center">
+    <div class="justify-center hidden md:flex">
       <el-pagination layout="total, prev, pager, next, jumper" :total="result.length" :page-size="pageSize" @current-change="currentPage = $event" hide-on-single-page class="my-4 md:my-8" v-if="!isLoading">
+      </el-pagination>
+    </div>
+    <div class="justify-center flex md:hidden">
+      <el-pagination layout="total, prev, pager, next" :total="result.length" :page-size="pageSize" @current-change="currentPage = $event" hide-on-single-page small class="my-4 md:my-8" v-if="!isLoading">
       </el-pagination>
     </div>
   </div>
 
   <h1 class="text-base text-center my-2 md:my-4" v-if="!isLoading && result.length <= 100">共{{ result.length }}条</h1>
   <div class="md:hidden">
-    <el-backtop :right="20" :bottom="70" />
+    <el-backtop :right="20" :bottom="120" />
   </div>
   <div class="hidden md:block">
     <el-backtop :right="60" :bottom="100" />
