@@ -6,13 +6,14 @@ import timeLineItem from './timeLineItem.vue'
 import { computed, ref, onUpdated,onMounted } from 'vue'
 
 const store = useStore()
-const { activityList } = storeToRefs(store)
+const { activityList,loadingCombine } = storeToRefs(store)
 
 let startDate = ref(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()))
 let endDate = ref(new Date(new Date().getFullYear(), new Date().getMonth() , new Date().getDate() + 30, 23, 59, 59))
 
 let maxLength = ref(3)
 let loadingItem = ref(false)
+let scrollDisable = ref(false)
 
 // 筛选并按照时间排序
 const result = computed(() => activityList.value.filter(activity => {
@@ -24,6 +25,7 @@ const result = computed(() => activityList.value.filter(activity => {
 
 function updateDate (startdate,enddate) {
   maxLength.value = 3
+  scrollDisable.value = false
   enddate.setHours(23,59,59)
   startDate.value = startdate
   endDate.value = enddate
@@ -55,6 +57,9 @@ function load() {
   // 假装自己在加载
   setTimeout(() => {
     maxLength.value += 3
+    if (maxLength.value >= groupByDate.value.length) {
+      scrollDisable.value = true
+    }
     loadingItem.value = false
   }, 100)
 }
@@ -78,9 +83,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <dataPicker @change-date="updateDate"/>
+  <div v-loading="loadingCombine">
+    <dataPicker @change-date="updateDate"/>
+  </div>
   <div class="ml-2 mr-4 mt-5">
-    <el-timeline v-infinite-scroll="load">
+    <el-timeline v-infinite-scroll="load" :infinite-scroll-disabled="scrollDisable">
       <!-- 遍历groupByDate -->
       <el-timeline-item
         v-for="({date, activities}) in groupByDate.slice(0, maxLength)"
@@ -105,7 +112,7 @@ onMounted(() => {
   <h1 class="text-base text-center mb-2 text-sky-800 dark:text-sky-200" v-if="loadingItem">
     加载中...
   </h1>
-  <h1 class="text-base text-center my-3">共{{ result.length }}条</h1>
+  <h1 class="text-base text-center mb-3">共{{ result.length }}条</h1>
 
   <el-backtop :right="20" :bottom="70" />
 </template>
