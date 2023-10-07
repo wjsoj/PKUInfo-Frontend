@@ -11,7 +11,7 @@ const { activityList } = storeToRefs(store)
 let startDate = ref(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()))
 let endDate = ref(new Date(new Date().getFullYear(), new Date().getMonth() , new Date().getDate() + 30, 23, 59, 59))
 
-let maxLength = ref(1)
+let maxLength = ref(3)
 let loadingItem = ref(false)
 
 // 筛选并按照时间排序
@@ -23,7 +23,7 @@ const result = computed(() => activityList.value.filter(activity => {
 }))
 
 function updateDate (startdate,enddate) {
-  maxLength.value = 1
+  maxLength.value = 3
   enddate.setHours(23,59,59)
   startDate.value = startdate
   endDate.value = enddate
@@ -54,7 +54,7 @@ function load() {
   loadingItem.value = true
   // 假装自己在加载
   setTimeout(() => {
-    maxLength.value += 1
+    maxLength.value += 3
     loadingItem.value = false
   }, 100)
 }
