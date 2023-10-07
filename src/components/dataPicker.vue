@@ -1,5 +1,5 @@
 <script setup>
-import { ref,watch } from 'vue'
+import { ref } from 'vue'
 
 let emit = defineEmits(['changeDate'])
 
@@ -24,9 +24,11 @@ const disabledEndDate = (time) => {
   || time.getTime() < new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 29).getTime())
 }
 
-watch ([startDate,endDate], () => {
+const handleChange = () => {
   emit('changeDate', startDate.value, endDate.value)
-})
+  // 让日期选择器失去焦点
+  document.activeElement.blur()
+}
 </script>
 
 <template>
@@ -38,6 +40,7 @@ watch ([startDate,endDate], () => {
         type="date"
         placeholder="选择开始日期"
         :disabled-date="disabledStartDate"
+        @change="handleChange"
       />
     </div>
     <div class="flex flex-row my-2 mx-4 items-center">
@@ -47,6 +50,7 @@ watch ([startDate,endDate], () => {
         type="date"
         placeholder="选择结束日期"
         :disabled-date="disabledEndDate"
+        @change="handleChange"
       />
     </div>
   </div>
