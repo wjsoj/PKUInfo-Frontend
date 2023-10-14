@@ -6,7 +6,7 @@ import { onMounted, ref } from 'vue'
 const isDark = useDark()
 const router = useRouter()
 const activeName = ref('')
-// 获取当前网页路由
+// 获取当前网页路由，直接访问其他路径会被强行跳转到首页
 onMounted(() => {
   activeName.value = router.currentRoute.value.path == '/' ? 'first' : router.currentRoute.value.path == '/calendar' ? 'second' : 'third'
 })
@@ -20,6 +20,8 @@ const handleChange = (name) => {
     router.replace('/calendar')
   } else if (name === 'third') {
     router.replace('/submit')
+  } else if (name === 'fourth') {
+    router.replace('/talk')
   }
 }
 
@@ -37,19 +39,32 @@ function goToUrl (url) {
         <el-tabs v-model="activeName" @tab-change="handleChange">
         <el-tab-pane label="活动列表" name="first" >
           <template #label>
-            <span class="text-lg px-2 py-2">
+            <span class="text-base py-2">
               活动列表
             </span>
           </template>
         </el-tab-pane>
         <el-tab-pane label="活动日历" name="second" >
           <template #label>
-            <span class="text-lg px-2 py-2">
+            <span class="text-base py-2">
               活动日历
             </span>
           </template>
         </el-tab-pane>
-        <!-- <el-tab-pane label="提交链接" name="third" /> -->
+        <el-tab-pane label="提交链接" name="third" >
+          <template #label>
+            <span class="text-base py-2">
+              提交链接
+            </span>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane label="小北问答" name="fourth" >
+          <template #label>
+            <span class="text-base py-2">
+              小北问答
+            </span>
+          </template>
+        </el-tab-pane> 
       </el-tabs>
       </div>
 
@@ -67,7 +82,8 @@ function goToUrl (url) {
     <el-tabs v-model="activeName" :stretch="true" @tab-change="handleChange">
       <el-tab-pane label="活动列表" name="first" />
       <el-tab-pane label="活动日历" name="second" />
-      <!-- <el-tab-pane label="提交链接" name="third" /> -->
+      <el-tab-pane label="提交链接" name="third" />
+      <el-tab-pane label="小北问答" name="fourth" />
     </el-tabs>
   </div>
 </div>

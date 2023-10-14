@@ -10,7 +10,7 @@ export const useStore = defineStore('store', () => {
   const loadingCombine = computed(() => {
     return isLoading.value || isBackLoading.value
   })
-
+  
   function concatArray(arr1, arr2) {
     // 排序
     arr2.sort((a, b) => {
@@ -28,28 +28,41 @@ export const useStore = defineStore('store', () => {
     })
   }
 
+  function preprocess(data) {
+    let activityList = data.activityList
+    let tags = data.tags
+    // 为activityList中的每个元素添加一个tag属性，值是tags中对应位置的元素
+    activityList.forEach((item, index) => {
+      item.tag = tags[index]
+    })
+    return activityList
+  }
+
   async function fetchData(param) {
     isBackLoading.value = true
     const [data1, data2, data3] = await Promise.all([
-      request.get('/user/activity/' + param[0]),
-      request.get('/user/activity/' + param[1]),
-      request.get('/user/activity/' + param[2])
+      request.get('/user/activity_with_tags/' + param[0]),
+      request.get('/user/activity_with_tags/' + param[1]),
+      request.get('/user/activity_with_tags/' + param[2])
     ]).catch(err => {
       console.log(err)
       ElMessage.error("后台获取数据失败")
     })
-    concatArray(activityList.value, data1.data.data)
-    concatArray(activityList.value, data2.data.data)
-    concatArray(activityList.value, data3.data.data)
+    concatArray(activityList.value, preprocess(data1.data.data))
+    console.log('fetch 1 done')
+    concatArray(activityList.value, preprocess(data2.data.data))
+    console.log('fetch 2 done')
+    concatArray(activityList.value, preprocess(data3.data.data))
     isBackLoading.value = false
   }
+  
   async function initFetchData() {
     isLoading.value = true
     // 获取今天的日期
     const today = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
     // 获取活动列表
-    await request.get('/user/activity/' + today).then(res => {
-      activityList.value = res.data.data
+    await request.get('/user/activity_with_tags/' + today).then(res => {
+      activityList.value = preprocess(res.data.data)
     }).catch(err => {
       console.log(err)
       if ('AxiosError' === err.name ) {
@@ -69,9 +82,9 @@ export const useStore = defineStore('store', () => {
         return a.startTime < b.startTime ? -1 : 1
       }
     })
-    // 构造30天前的日期
+    // 构造10天前的日期
     const date = new Date()
-    date.setDate(date.getDate() - 30)
+    date.setDate(date.getDate() - 10)
     const lastMonth = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
     // 构造30天后的日期
     const date1 = new Date()
@@ -82,7 +95,7 @@ export const useStore = defineStore('store', () => {
     date2.setDate(date2.getDate() + 60)
     const nextMonth1 = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
     // 形成数组传入fetchdata
-    const dateArray = [lastMonth, nextMonth, nextMonth1]
+    const dateArray = [lastMonth + '/' + today, nextMonth, nextMonth1]
     fetchData(dateArray)
     isLoading.value = false
   }

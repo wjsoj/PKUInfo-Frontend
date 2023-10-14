@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import tagItem from './tagItem.vue'
 
 let drawer = ref(false)
 let { activities, day } = defineProps({
@@ -43,6 +44,9 @@ let { activities, day } = defineProps({
                 <el-collapse-item :title="activity.title" :name="activity.id">
                   <!-- 将activity所有字段以key - value的表格形式显示在一起 -->
                   <div class="grid grid-cols-3">
+
+                    <p class="font-semibold my-1.5">分类标签：</p>
+                    <p class=" col-span-2"><tagItem :content="activity.tag"/></p>
 
                     <p class="font-semibold">活动地点：</p>
                     <p class=" col-span-2">{{ activity.address }}</p>

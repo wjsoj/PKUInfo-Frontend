@@ -5,6 +5,8 @@ import dataPicker from './dataPicker.vue'
 import { computed, ref, onUpdated, onMounted } from 'vue'
 import { useDark } from '@vueuse/core'
 import searchBar from './searchBar.vue'
+import tagPicker from './tagPicker.vue'
+import tagItem from './tagItem.vue'
 const isDark = useDark()
 const store = useStore()
 const { activityList,isLoading,loadingCombine } = storeToRefs(store)
@@ -15,6 +17,8 @@ let keyWord = ref('')
 
 let currentPage = ref(1)
 let pageSize = ref(100)
+
+let selectedCategory = ref(['学术','学工','就业','文艺','体育','其他'])
 
 const result = computed(() => activityList.value.filter(activity => {
   let activityDate = new Date(activity.startDate)
@@ -27,6 +31,13 @@ const result = computed(() => activityList.value.filter(activity => {
   // 使用正则表达式快速匹配关键词
   let reg = new RegExp(keyWord.value, 'g')
   return reg.test(activity.title) || reg.test(activity.description)
+}).filter(activity => {
+  // 如果分类为全部，返回所有活动
+  if (selectedCategory.value.length === 6) {
+    return true
+  }
+  // 如果分类不为空，返回符合分类的活动
+  return selectedCategory.value.some(tag => activity.tag.includes(tag))
 }).sort((a,b) => {
   return new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
 })
@@ -50,6 +61,10 @@ function highLight(str) {
   return str.replace(reg, `<span class="bg-yellow-200 dark:bg-yellow-700">${keyWord.value}</span>`)
 }
 
+function updateTag (tag) {
+  selectedCategory.value = tag
+}
+
 onMounted(() => {
   let footer = document.querySelector('footer')
   footer.classList.remove('fixed')
@@ -69,9 +84,12 @@ onUpdated(() => {
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row justify-center"  v-loading="loadingCombine">
-    <dataPicker @change-date="updateDate" />
-    <searchBar @change-content="filterateEvent" />
+  <div v-loading="loadingCombine">
+    <div class="flex flex-col md:flex-row justify-center md:my-4 lg:mt-8">
+      <dataPicker @change-date="updateDate" />
+      <searchBar @change-content="filterateEvent" />
+    </div>
+    <tagPicker @change-tag="updateTag"/>
   </div>
   
   <div class="md:mx-10 lg:mx-16">
@@ -90,7 +108,14 @@ onUpdated(() => {
           <div v-html="highLight(row.title)"></div>
         </template>
       </el-table-column>
-      <el-table-column sortable label="活动日期" width="200" >
+
+      <el-table-column sortable :sort-method="(a, b) => a.tag.localeCompare(b.tag)" label="分类" width="90">
+        <template #default="{row}">
+          <tagItem :content="row.tag" />
+        </template>
+      </el-table-column>
+
+      <el-table-column sortable label="活动日期" width="200" :sort-method="(a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()">
         <template #default="{row}">
           <span v-if="row.startTime !== '00:00:00'">
             {{ row.startDate }} <span v-if="row.startDate!==row.endDate"> - {{ row.endDate }}</span> <br />

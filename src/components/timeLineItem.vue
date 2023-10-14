@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from 'vue'
+import tagItem from './tagItem.vue'
+
 let dialogVisible = ref(false)
 let { activity } = defineProps({
   activity: {
@@ -19,7 +21,10 @@ function goToUrl (url) {
 <template>
   <el-card>
     <h4 class="text-lg font-semibold my-2 text-slate-700 dark:text-slate-300">{{ activity.title }}</h4>
-    <p class="text-sky-800 dark:text-sky-200" @click="openDialog">查看详情</p>
+    <div class="flex flex-row">
+      <tagItem :content="activity.tag" />
+      <p class="text-sky-800 dark:text-sky-200 my-1.5 ml-2 cursor-pointer" @click="openDialog">查看详情</p>
+    </div>
     <el-dialog v-model="dialogVisible" title="活动详情" width="80%" align-center>
       <div class="flex flex-col justify-center items-start">
         <h2 class="font-semibold text-lg my-2">{{ activity.title }}</h2>
