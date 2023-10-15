@@ -20,8 +20,8 @@ onUpdated(() => {
         </div>
       </div>
       <div v-else class="flex flex-row justify-start items-start mr-10 md:mr-40 my-2">
-        <div class="w-10 h-10 rounded-full mr-2 shrink-0">
-          <img src="/favicon.png" alt="小北" class="w-full h-full">
+        <div class="w-10 h-10 mr-2 shrink-0">
+          <img src="/favicon.png" alt="小北" class="w-full h-full rounded-full">
         </div>
         <div class="rounded-xl text-sm md:text-base dark:bg-slate-700 bg-slate-200 px-4 py-2">
           {{ item.content }}
@@ -29,8 +29,8 @@ onUpdated(() => {
       </div>
     </div>
     <div v-if="isLoading" class="flex flex-row justify-start items-start mr-10 md:mr-40 my-2">
-      <div class="w-10 h-10 rounded-full mr-2 shrink-0">
-        <img src="/favicon.png" alt="小北" class="w-full h-full">
+      <div class="w-10 h-10 mr-2 shrink-0">
+        <img src="/favicon.png" alt="小北" class="w-full h-full rounded-full">
       </div>
       <div class="rounded-xl text-sm md:text-base dark:bg-slate-700 bg-slate-200 px-4 py-2">
         加载中...请耐心等待响应
