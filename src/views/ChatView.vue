@@ -16,11 +16,6 @@ onUnmounted(() => {
 
 <template>
   <div>
-  <div class="md:hidden">
     <chatArea />
-  </div>
-  <div class="hidden md:block">
-    <h1>电脑端懒得适配了,目前页脚显示有Bug</h1>
-  </div>
   </div>
 </template>

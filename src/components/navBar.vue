@@ -32,7 +32,7 @@ function goToUrl (url) {
 
 <template>
 <div class="flex flex-col">
-  <div class="flex flex-row justify-between items-center py-3 px-4 lg:px-10 lg:py-1 bg-slate-200 dark:bg-slate-800">
+  <div class="flex flex-row justify-between items-center py-3 px-4 lg:px-10 md:py-1 bg-slate-200 dark:bg-slate-800">
     <h1 class="text-[26px] lg:text-3xl font-semibold bg-clip-text bg-gradient-to-t text-transparent from-slate-700 to-sky-800 dark:from-slate-50 dark:to-sky-300">PKU Info</h1>
     <div class="flex flex-row items-center">
       <div class="flex-row mr-10 mt-2 hidden md:flex">

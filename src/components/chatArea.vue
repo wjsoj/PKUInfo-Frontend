@@ -54,6 +54,14 @@ onMounted(() => {
       content: '这里是不是应该写点啥'
     }]
   }
+  // 控制mainarea的高度为固定值
+  // 如果屏幕宽度大于768px
+  let mainarea = document.getElementById('mainarea')
+  if (window.innerWidth > 768) {
+    mainarea.style.height = window.innerHeight - 196 + 'px'
+  } else {
+    mainarea.style.height = window.innerHeight - 225 + 'px'
+  }
 })
 onUnmounted(() => {
   localStorage.setItem('diagHistory', JSON.stringify(diagHistory.value))
@@ -61,20 +69,22 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="w-full h-[70vh]">
-    <diagArea :diag="diagHistory" :is-loading="isFetching"/>
-  </div>
-  <div class="fixed bottom-0 w-full pb-6 pt-3 bg-slate-200 dark:bg-slate-800">
-    <div class="flex flex-row items-center px-4">
-      <div class="w-full mr-4">
-        <el-input v-model="ask" placeholder="请输入问题" :autosize="{ minRows: 2, maxRows: 8 }" type="textarea" clearable maxlength="200" :disabled="isFetching" @keydown.enter.exact.prevent="addHistory" />
-      </div>
-      <div class="text-2xl px-2 py-2 rounded-full bg-teal-200 dark:bg-blue-600 cursor-pointer" @click="addHistory">
-        <Promotion style="width: 1em; height: 1em;"/>
-      </div>
+  <div class="w-full">
+    <div class="w-full md:px-20 xl:px-48 mt-[-14px] md:mt-0" id="mainarea">
+      <diagArea :diag="diagHistory" :is-loading="isFetching"/>
     </div>
-    <div class="flex justify-center">
-      <span class="text-sky-800 dark:text-sky-200 cursor-pointer mt-2" @click="reset()">重置会话</span>
+    <div class="fixed bottom-0 w-full pb-6 pt-3 bg-slate-200 dark:bg-slate-800">
+      <div class="flex flex-row items-center px-4 md:px-24 xl:px-56">
+        <div class="w-full mr-4">
+          <el-input v-model="ask" placeholder="请输入问题" :autosize="{ minRows: 2}" type="textarea" clearable maxlength="200" :disabled="isFetching" @keydown.enter.exact.prevent="addHistory" />
+        </div>
+        <div class="text-2xl px-2 py-2 rounded-full bg-teal-200 dark:bg-blue-600 cursor-pointer" @click="addHistory">
+          <Promotion style="width: 1em; height: 1em;"/>
+        </div>
+      </div>
+      <div class="flex justify-center">
+        <span class="text-sky-800 dark:text-sky-200 cursor-pointer mt-2" @click="reset()">重置会话</span>
+      </div>
     </div>
   </div>
 </template>
