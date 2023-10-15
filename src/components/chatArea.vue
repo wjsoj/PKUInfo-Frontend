@@ -58,9 +58,9 @@ onMounted(() => {
   // 如果屏幕宽度大于768px
   let mainarea = document.getElementById('mainarea')
   if (window.innerWidth > 768) {
-    mainarea.style.height = window.innerHeight - 196 + 'px'
+    mainarea.style.height = window.innerHeight - 180 + 'px'
   } else {
-    mainarea.style.height = window.innerHeight - 225 + 'px'
+    mainarea.style.height = window.innerHeight - 213 + 'px'
   }
 })
 onUnmounted(() => {
@@ -73,7 +73,7 @@ onUnmounted(() => {
     <div class="w-full md:px-20 xl:px-48 mt-[-14px] md:mt-0" id="mainarea">
       <diagArea :diag="diagHistory" :is-loading="isFetching"/>
     </div>
-    <div class="fixed bottom-0 w-full pb-6 pt-3 bg-slate-200 dark:bg-slate-800">
+    <div class="fixed bottom-0 w-full py-3 bg-slate-200 dark:bg-slate-800">
       <div class="flex flex-row items-center px-4 md:px-24 xl:px-56">
         <div class="w-full mr-4">
           <el-input v-model="ask" placeholder="请输入问题" :autosize="{ minRows: 2}" type="textarea" clearable maxlength="200" :disabled="isFetching" @keydown.enter.exact.prevent="addHistory" />
