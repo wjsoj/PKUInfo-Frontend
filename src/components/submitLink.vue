@@ -1,18 +1,11 @@
 <script setup>
 import { ElMessage } from 'element-plus'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { ref } from 'vue'
 import { request } from '@/utils/request'
 import { UploadFilled } from '@element-plus/icons-vue'
 
 let link = ref('')
 let isPosting = ref(false)
-
-onMounted(() => {
-  document.querySelector('footer').style.position = 'fixed'
-})
-onUnmounted(() => {
-  document.querySelector('footer').style.position = 'relative'
-})
 
 async function submitLink() {
   if (link.value === '') {

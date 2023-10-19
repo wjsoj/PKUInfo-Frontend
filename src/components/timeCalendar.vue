@@ -2,7 +2,7 @@
 import { useStore } from '../stores'
 import { storeToRefs } from 'pinia'
 import calendarCell from './calendarCell.vue'
-import { onUpdated, onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 
 const store = useStore()
@@ -37,27 +37,10 @@ watch(date, (newDate, oldDate) => {
   // 还原为旧日期
   date.value = oldDate
 })
-
-// 监听窗口内容变化，如果窗口内容高度不足窗口高度，将footer固定在底部
-onUpdated(() => {
-  let footer = document.querySelector('footer')
-  footer.classList.remove('fixed')
-  if (document.body.clientHeight < window.innerHeight) {
-    footer.classList.add('fixed')
-  }
-})
-
-onMounted(() => {
-  let footer = document.querySelector('footer')
-  footer.classList.remove('fixed')
-  if (document.body.clientHeight < window.innerHeight) {
-    footer.classList.add('fixed')
-  }
-})
 </script>
 
 <template>
-  <div class="min-h-[80vh] mx-10 my-6">
+  <div class="mx-10 my-6">
     <el-calendar v-loading="loadingCombine" v-model="date">
       <template #date-cell="{ data }">
         <calendar-cell :activities="getActivitiesByDate(data.day)" :day="data.day"/>

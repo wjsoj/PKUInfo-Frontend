@@ -11,17 +11,19 @@ onMounted(() => {
 </script>
 
 <template>
+<div class="flex flex-col min-h-screen">
   <header>
     <navBar />
   </header>
-  <main>
+  <main class="flex-grow">
     <router-view v-slot="{ Component }">
       <transition name="fade">
         <component :is="Component"/>
       </transition>
     </router-view>
   </main>
-  <footer class="fixed bottom-0 w-full">
+  <footer class="w-full">
     <footerBar />
   </footer>
+</div>
 </template>
