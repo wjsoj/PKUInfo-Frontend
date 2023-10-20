@@ -12,6 +12,8 @@ const date1 = new Date()
 date1.setDate(date1.getDate() + 30)
 const nextMonth = date1.getFullYear() + '-' + (date1.getMonth() + 1) + '-' + date1.getDate()
 
+const initContent = '这里是不是应该写点啥[那啥，大家要求不要太高，可以理解成这就是个套壳GPT的搜索，提问方式类似于【有什么计算机相关的讲座（信科，信息科学技术学院）】以及不要报以太高的期望]'
+
 async function addHistory () {
   if (ask.value) {
     diagHistory.value.push({
@@ -40,7 +42,11 @@ async function addHistory () {
 }
 
 function reset () {
-  diagHistory.value = []
+  diagHistory.value = [{
+    id: 0,
+    type: 'answer',
+    content: initContent
+  }]
   localStorage.removeItem('diagHistory')
 }
 
@@ -51,7 +57,7 @@ onMounted(() => {
     diagHistory.value = [{
       id: 0,
       type: 'answer',
-      content: '这里是不是应该写点啥'
+      content: initContent
     }]
   }
   // 控制mainarea的高度为固定值
