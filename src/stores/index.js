@@ -57,6 +57,14 @@ export const useStore = defineStore('store', () => {
   }
   
   async function initFetchData() {
+    ElMessage({
+      showClose: true,
+      message:"期末季暂停维护，请见谅。祝大家期末顺利！",
+      duration: 0,
+      type:"warning",
+      offset:10,
+      center:true,
+    })
     isLoading.value = true
     // 获取今天的日期
     const today = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
