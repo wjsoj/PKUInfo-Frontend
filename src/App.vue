@@ -1,29 +1,15 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import navBar from './components/navBar.vue'
-import footerBar from './components/footerBar.vue'
-import { onMounted } from 'vue'
-import { useStore } from './stores'
-const store = useStore()
-onMounted(() => {
-  store.initFetchData()
-})
+import NavBar from './components/NavBar.vue';
+
 </script>
 
 <template>
-<div class="flex flex-col min-h-screen">
   <header>
-    <navBar />
+    <NavBar />
   </header>
-  <main class="flex-grow">
-    <router-view v-slot="{ Component }">
-      <transition name="fade">
-        <component :is="Component"/>
-      </transition>
-    </router-view>
-  </main>
-  <footer class="w-full">
-    <footerBar />
-  </footer>
-</div>
+
+  <div class="grow flex flex-col">
+    <RouterView />
+  </div>
 </template>
