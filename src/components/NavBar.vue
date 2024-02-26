@@ -12,10 +12,11 @@ const toast = useToast();
 
 const infoStore = useInfoStore();
 const { loginStatus } = storeToRefs(infoStore);
-const { logout } = infoStore;
 
 function signout() {
-  logout();
+  loginStatus.value = false;
+  sessionStorage.removeItem('auth');
+  sessionStorage.removeItem('token');
   // 如果是在/settings页面登出，登出后跳转到/login页面
   if (router.currentRoute.value.path === '/settings' || router.currentRoute.value.path === '/profile') {
     router.replace('/');

@@ -42,6 +42,11 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue')
     },
     {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue')
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('../views/NotFoundView.vue')
@@ -58,11 +63,14 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // 判断将要访问的路由信息对象是否需要用户登录
   if (to.meta.isLogin) {
-      let userLogin = localStorage.getItem('loginUser') // 获取存储对象
+      let userLogin = sessionStorage.getItem('auth') // 获取存储对象
       // 判断用户是否已经登陆了
       if(userLogin == null) {
           // 未登录 --> 跳转至登录页
-          return next({ path: '/login' }) 
+          return next({
+            path: '/login',
+            query: { redirect: to.fullPath }
+          })
       }
   }
   return next() // 放行

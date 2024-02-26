@@ -18,7 +18,8 @@ app.use(router)
 const options = {
   transition: "Vue-Toastification__slideBlurred",
   maxToasts: 8,
-  newestOnTop: true
+  newestOnTop: true,
+  pauseOnHover: false,
 };
 app.use(Toast, options);
 
