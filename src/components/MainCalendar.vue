@@ -4,7 +4,14 @@ import { ChevronRight, ChevronLeft } from 'lucide-vue-next';
 import moment from 'moment';
 import { request } from '@/utils/request';
 import { useToast } from 'vue-toastification';
+import CalendarBadge from './CalendarBadge.vue';
 import ActivityCard from './ActivityCard.vue';
+import ActivityDetail from './ActivityDetail.vue';
+import { useInfoStore } from '@/stores/infoStore';
+import { storeToRefs } from 'pinia';
+const infoStore = useInfoStore();
+const { loginStatus } = storeToRefs(infoStore);
+
 const toast = useToast();
 
 const today = moment().startOf('day');
@@ -23,6 +30,22 @@ const firstDayOfMonth = ref(moment().startOf('month'));
 const currentMonth = ref(moment(today).format("MMMM-yyyy"));
 const selectedDate = ref(today);
 const records = ref([]);
+
+function chooseActivity(activity) {
+  request.put(`/view/${activity.id}`)
+    .catch(err => {
+      console.log('err', err);
+    });
+}
+function subscribe(id) {
+  request.put(`/auth/subscribe/${id}`)
+    .then(() => {
+      toast.success('订阅成功');
+    })
+    .catch(err => {
+      console.log('err', err);
+    });
+}
 
 const allDaysInMonth = ()=> {
   let start = moment(firstDayOfMonth.value).startOf('week')
@@ -81,9 +104,33 @@ const getNextMonth = () => {
   currentMonth.value = moment(firstDayOfNextMonth).format("MMM-yyyy");
 };
 
+const changeDate = (date) => {
+  selectedDate.value = date;
+}
 </script>
 
 <template>
+  <input type="checkbox" id="detailinfo" class="modal-toggle" />
+  <div class="modal" role="dialog">
+    <div class="modal-box">
+      <div v-for="activity in records" :key="activity.id" class="flex flex-col items-center w-full ">
+        <div class="flex flex-row justify-between w-full">
+          <div class="grow self-start text-xl font-bold">{{ activity.title }}</div>
+          <button v-if="loginStatus" class="btn btn-sm btn-primary self-end ml-2" @click="subscribe(activity.id)">订阅</button>
+        </div>
+        <div tabindex="0" class="collapse"> 
+          <div class="collapse-title text-sm font-medium" @click="chooseActivity(activity)">
+            详情
+          </div>
+          <div class="collapse-content"> 
+            <ActivityDetail :activity="activity" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <label class="modal-backdrop" for="detailinfo">Close</label>
+  </div>
+
 <div class="w-full bg-base-100 p-4 rounded-lg">
   <div class="flex  justify-between gap-0 sm:gap-4">
     <p class="font-semibold text-2xl w-32 lg:w-56">
@@ -111,12 +158,15 @@ const getNextMonth = () => {
 
         
   <div class="grid grid-cols-7 mt-1 place-items-center">
-    <div v-for="(day, idx) in allDaysInMonth()" :key="idx" :class="colStartClasses[moment(day).day().toString()] + ' border border-solid border-base-content/50 w-full h-11 lg:h-28'">
+    <div v-for="(day, idx) in allDaysInMonth()" :key="idx" :class="colStartClasses[moment(day).day().toString()] + ' border border-solid border-base-content/50 w-full h-11 lg:min-h-28'">
       <p class="flex items-center justify-center h-8 w-8 rounded-full mx-1 mt-1 text-sm cursor-pointer hover:bg-base-300"
         :class="{'bg-primary dark:hover:bg-base-300 text-primary-content': isToday(day), 'text-base-content/50': isDifferentMonth(day),'bg-accent text-accent-content hover:bg-accent/30': moment(day).isSame(selectedDate, 'day')}"
         @click="selectedDate = day">
         {{ moment(day).format('D') }}
       </p>
+      <div class="w-full lg:block hidden">
+        <CalendarBadge :date="moment(day).format('YYYY-MM-DD')" @change-date="changeDate(day)" />
+      </div>
     </div>
   </div>
 

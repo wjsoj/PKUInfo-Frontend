@@ -3,6 +3,10 @@ import { request } from '@/utils/request';
 import { onMounted, ref, watch } from 'vue';
 import { useInfoStore } from '@/stores/infoStore';
 import { storeToRefs } from 'pinia';
+import { useToast } from 'vue-toastification';
+import ActivityDetail from './ActivityDetail.vue';
+
+const toast = useToast();
 const infoStore = useInfoStore();
 const { loginStatus } = storeToRefs(infoStore);
 
@@ -57,6 +61,15 @@ function selectChanged(e) {
 function chooseActivity(activity) {
   selectedActivity.value = activity;
   request.put(`/view/${activity.id}`)
+    .catch(err => {
+      console.log('err', err);
+    });
+}
+function subscribe(id) {
+  request.put(`/auth/subscribe/${id}`)
+    .then(() => {
+      toast.success('订阅成功');
+    })
     .catch(err => {
       console.log('err', err);
     });
@@ -124,11 +137,19 @@ watch(sortBySub, () => {
   </div>
 </div>
 
-<div class="flex lg:hidden flex-col items-center mx-4">
-  <div v-for="activity in Activities" :key="activity.id" class="flex flex-col items-center w-full">
-    <div class="flex flex-row w-full">
-      <div class="grow self-start text-xl">{{ activity.title }}</div>
-      <button v-if="loginStatus" class="btn btn-primary ml-4">订阅</button>
+<div class="flex lg:hidden flex-col items-center mx-4 my-10 space-y-2">
+  <div v-for="activity in Activities" :key="activity.id" class="flex flex-col items-center w-full ">
+    <div class="flex flex-row justify-between w-full">
+      <div class="grow self-start text-xl font-bold">{{ activity.title }}</div>
+      <button v-if="loginStatus" class="btn btn-sm btn-primary self-end ml-2" @click="subscribe(selectedActivity.id)">订阅</button>
+    </div>
+    <div tabindex="0" class="collapse"> 
+      <div class="collapse-title text-sm font-medium" @click="chooseActivity(activity)">
+        详情
+      </div>
+      <div class="collapse-content"> 
+        <ActivityDetail :activity="activity" />
+      </div>
     </div>
   </div>
 </div>

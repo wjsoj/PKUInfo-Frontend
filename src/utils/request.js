@@ -10,14 +10,14 @@ const request = axios.create({
     baseURL: "/api",
     timeout: 10000,
 })
-axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
-axios.defaults.headers.post['Content-Type'] = 'application/json'
+request.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
+request.defaults.headers.post['Content-Type'] = 'application/json'
 
 // 请求拦截器
-axios.interceptors.request.use(
+request.interceptors.request.use(
   (config) => {
     if (sessionStorage.getItem('token')) {
-    config.headers.Authorization = `Bearer ${sessionStorage.getItem('token')}`
+      config.headers.Authorization = `Bearer ${sessionStorage.getItem('token')}`
     }
     return config
   },
@@ -25,11 +25,11 @@ axios.interceptors.request.use(
 )
 
 // 响应拦截器
-axios.interceptors.response.use(
+request.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response && err.response.data) {
-      const code = err.response.status
+    if (err.response) {
+      const code = err.response.code
       const msg = err.response.data.message
       toast.error(`Code: ${code}, Message: ${msg}`)
     } else {

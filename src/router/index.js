@@ -25,12 +25,12 @@ const router = createRouter({
       meta: { isLogin : true },
       component: () => import('../views/ProfileView.vue')
     },
-    {
-      path: '/settings',
-      name: 'settings',
-      meta: { isLogin : true },
-      component: () => import('../views/SettingsView.vue')
-    },
+    // {
+    //   path: '/settings',
+    //   name: 'settings',
+    //   meta: { isLogin : true },
+    //   component: () => import('../views/SettingsView.vue')
+    // },
     {
       path: '/about',
       name: 'about',

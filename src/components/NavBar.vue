@@ -84,7 +84,7 @@ onMounted(() => {
           </div>
         </div>
         <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-32">
-          <li><RouterLink to="/settings">Settings</RouterLink></li>
+          <li><RouterLink to="/profile">Profile</RouterLink></li>
           <li v-if="loginStatus"><a @click="signout">Logout</a></li>
           <li v-else><RouterLink to="/login">Login</RouterLink></li>
         </ul>

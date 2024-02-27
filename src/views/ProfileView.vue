@@ -1,8 +1,7 @@
 <script setup>
+import SubcribedList from '@/components/SubcribedList.vue';
 </script>
 
 <template>
-  <div class="container mx-auto">
-    <h1 class="text-xl text-green-400 data-[theme=dark]:text-pink-400">Profile page</h1>
-  </div>
+  <SubcribedList />
 </template>

@@ -20,6 +20,7 @@ const options = {
   maxToasts: 8,
   newestOnTop: true,
   pauseOnHover: false,
+  timeout: 2000,
 };
 app.use(Toast, options);
 

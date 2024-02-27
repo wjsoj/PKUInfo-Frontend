@@ -25,10 +25,10 @@ function signin() {
     username: user.username,
     password: encrypt(user.password)
   }).then((res) => {
-    sessionStorage.setItem('auth', JSON.stringify(res.data))
     console.log(res.data)
     if (res.data.code === 200) {
       loginStatus.value = true
+      sessionStorage.setItem('auth', JSON.stringify(res.data))
       sessionStorage.setItem('token', res.data.data.token)
       toast.success('登录成功',{
         timeout: 2000
