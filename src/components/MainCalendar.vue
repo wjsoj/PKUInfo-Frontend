@@ -158,8 +158,8 @@ const changeDate = (date) => {
         
   <div class="grid grid-col auto-rows-auto mt-1 place-items-center items-stretch">
     <div v-for="(day, idx) in allDaysInMonth()" :key="idx" :class="colStartClasses[moment(day).day().toString()] + ' border border-solid border-base-content/50 w-full h-16 lg:h-auto'">
-      <p class="flex items-center justify-center h-8 w-8 rounded-full mx-auto lg:mx-1 mt-1 text-sm cursor-pointer hover:bg-base-300"
-      :class="{'bg-primary dark:hover:bg-base-300 text-primary-content': isToday(day), 'text-base-content/50': isDifferentMonth(day),'bg-accent text-accent-content hover:bg-accent/30': moment(day).isSame(selectedDate, 'day')}"
+      <p class="flex items-center justify-center h-8 w-8 rounded-full mx-auto lg:mx-1 mt-1 text-sm cursor-pointer "
+      :class="{'bg-primary text-primary-content': isToday(day), 'text-base-content/50': isDifferentMonth(day),'bg-accent text-accent-content': moment(day).isSame(selectedDate, 'day')}"
       @click="selectedDate = day">
         {{ moment(day).format('D') }}
       </p>
