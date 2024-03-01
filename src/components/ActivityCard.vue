@@ -24,7 +24,7 @@ async function viewMore() {
     </div>
     <div class="w-full flex flex-col items-start">
       <p class="justify-self-start">简介：</p>
-      <p class=" col-span-2 justify-self-start">{{ activity.description }}</p>
+      <p class=" col-span-2 justify-self-start text-sm">{{ activity.description }}</p>
     </div>
       <div v-if="isShow" class="w-full grid grid-cols-3">
         <p class="justify-self-start" v-if="activity.college">举办单位：</p>
@@ -36,7 +36,7 @@ async function viewMore() {
         <p class="justify-self-start" v-if="activity.info">活动信息：</p>
         <p class="col-span-2 justify-self-start" v-if="activity.info">{{ activity.info }}</p>
         <p class="justify-self-start" v-if="activity.link">推送链接：</p>
-        <a class="col-span-2 justify-self-start" :href="activity.link" target="_blank" v-if="activity.link">{{ activity.link }}</a>
+        <a class="col-span-2 justify-self-start text-wrap text-info" :href="activity.link" target="_blank" v-if="activity.link">访问链接</a>
       </div>
     <div class="flex flex-row w-full justify-between">
       <div class="self-start flex flex-col items-start text-sm">

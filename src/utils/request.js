@@ -8,7 +8,7 @@ const request = axios.create({
     // baseURL: "https://pkuinfo.lcpu.dev/api"
     // baseURL: "http://111.229.135.84:8080",
     baseURL: "/api",
-    timeout: 10000,
+    timeout: 100000,
 })
 request.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
 request.defaults.headers.post['Content-Type'] = 'application/json'

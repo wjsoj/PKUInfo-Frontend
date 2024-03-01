@@ -155,23 +155,22 @@ const changeDate = (date) => {
   <div class="grid grid-cols-7 gap-6 sm:gap-12 place-items-center">
     <div class="text-xs capitalize" v-for="day in weekdays" :key="day">{{day}}</div>
   </div>
-
         
   <div class="grid grid-col auto-rows-auto mt-1 place-items-center items-stretch">
-    <div v-for="(day, idx) in allDaysInMonth()" :key="idx" :class="colStartClasses[moment(day).day().toString()] + ' border border-solid border-base-content/50 w-full h-11 lg:h-auto'">
-      <p class="flex items-center justify-center h-8 w-8 rounded-full mx-1 mt-1 text-sm cursor-pointer hover:bg-base-300"
-        :class="{'bg-primary dark:hover:bg-base-300 text-primary-content': isToday(day), 'text-base-content/50': isDifferentMonth(day),'bg-accent text-accent-content hover:bg-accent/30': moment(day).isSame(selectedDate, 'day')}"
-        @click="selectedDate = day">
+    <div v-for="(day, idx) in allDaysInMonth()" :key="idx" :class="colStartClasses[moment(day).day().toString()] + ' border border-solid border-base-content/50 w-full h-16 lg:h-auto'">
+      <p class="flex items-center justify-center h-8 w-8 rounded-full mx-auto lg:mx-1 mt-1 text-sm cursor-pointer hover:bg-base-300"
+      :class="{'bg-primary dark:hover:bg-base-300 text-primary-content': isToday(day), 'text-base-content/50': isDifferentMonth(day),'bg-accent text-accent-content hover:bg-accent/30': moment(day).isSame(selectedDate, 'day')}"
+      @click="selectedDate = day">
         {{ moment(day).format('D') }}
       </p>
-      <div class="w-full h-full lg:block hidden">
-        <CalendarBadge :date="moment(day).format('YYYY-MM-DD')" @change-date="changeDate(day)" />
-      </div>
+        <CalendarBadge :date="moment(day).format('YYYY-MM-DD')"  @change-date="changeDate(day)" />
     </div>
   </div>
 
-  <div v-for="record in records" :key="record.id" class="flex flex-col lg:hidden items-center py-10 space-y-2">
-    <ActivityCard :activity="record" />
+  <div class="flex flex-col lg:hidden items-center py-10 space-y-2">
+    <div v-for="record in records" :key="record.id">
+      <ActivityCard :activity="record" />
+    </div>
   </div>
   <div class="lg:hidden" v-if="records.length == 0">
     <h3 class="text-center text-2xl font-semibold mt-10">No activities</h3>

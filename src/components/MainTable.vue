@@ -4,6 +4,7 @@ import { onMounted, ref, watch } from 'vue';
 import { useInfoStore } from '@/stores/infoStore';
 import { storeToRefs } from 'pinia';
 import { useToast } from 'vue-toastification';
+import { tag_list,getFormatTime } from './constant';
 import ActivityDetail from './ActivityDetail.vue';
 
 const toast = useToast();
@@ -16,6 +17,7 @@ const Activities = ref([]);
 const page = ref(1);
 const selectedActivity = ref({});
 const today = new Date().toISOString().split('T')[0];
+const tag = ref(0);
 let totalPage = 0;
 
 const fetchActivities = async () => {
@@ -31,23 +33,6 @@ const fetchActivities = async () => {
     Activities.value = res.records;
     totalPage = res.pages;
   }
-}
-
-const getFormatTime = (activity) => {
-  let time = '';
-  if (activity.startDate) {
-    time = activity.startDate;
-    if (activity.startTime) {
-      time += ' ' + activity.startTime;
-    }
-    if (activity.endDate) {
-      time += ' - ' + activity.endDate;
-      if (activity.endTime) {
-        time += ' ' + activity.endTime;
-      }
-    }
-  }
-  return time;
 }
 
 function selectChanged(e) {
@@ -92,11 +77,17 @@ watch(sortBySub, () => {
     <input type="text" class="grow" placeholder="Search" />
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd" /></svg>
   </label>
-  <select class="select" @change="selectChanged">
-    <option disabled selected>排序方式（默认按浏览量）</option>
-    <option>按浏览量</option>
-    <option>按订阅量</option>
-  </select>
+  <div class="flex flex-row w-full flex-wrap space-x-4 lg:justify-end">
+    <select class="select select-sm lg:select-md select-bordered" @change="selectChanged">
+      <option disabled selected>排序方式（默认按浏览量）</option>
+      <option>按浏览量</option>
+      <option>按订阅量</option>
+    </select>
+    <select class="select select-sm lg:select-md select-bordered" v-model="tag">
+      <option disabled selected value="0">标签</option>
+      <option v-for="(item,index) in tag_list" :key="index" :value="index">{{ item }}</option>
+    </select>
+  </div>
 </div>
 
 <dialog id="detail" class="modal">
@@ -126,9 +117,9 @@ watch(sortBySub, () => {
     </thead>
     <tbody>
       <tr v-for="activity in Activities" :key="activity.id">
-        <td class=" cursor-pointer" onclick="detail.showModal()" @click="chooseActivity(activity)">{{ activity.title }}</td>
-        <td>{{ getFormatTime(activity) }}</td>
-        <td>{{ activity.description }}</td>
+        <td class=" cursor-pointer font-semibold" onclick="detail.showModal()" @click="chooseActivity(activity)">{{ activity.title }}</td>
+        <td class="text-sm text-base-content/80">{{ getFormatTime(activity) }}</td>
+        <td class="text-sm">{{ activity.description }}</td>
       </tr>
     </tbody>
   </table>
@@ -137,14 +128,14 @@ watch(sortBySub, () => {
   </div>
 </div>
 
-<div class="flex lg:hidden flex-col items-center mx-4 my-10 space-y-2">
+<div class="flex lg:hidden flex-col items-center my-10 space-y-2">
   <div v-for="activity in Activities" :key="activity.id" class="flex flex-col items-center w-full ">
     <div class="flex flex-row justify-between w-full">
-      <div class="grow self-start text-xl font-bold">{{ activity.title }}</div>
+      <div class="grow self-start text-lg font-bold px-4">{{ activity.title }}</div>
       <button v-if="loginStatus" class="btn btn-sm btn-primary self-end ml-2" @click="subscribe(selectedActivity.id)">订阅</button>
     </div>
     <div tabindex="0" class="collapse"> 
-      <div class="collapse-title text-sm font-medium" @click="chooseActivity(activity)">
+      <div class="collapse-title text-sm font-medium px-4" @click="chooseActivity(activity)">
         详情
       </div>
       <div class="collapse-content"> 
