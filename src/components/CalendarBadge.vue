@@ -1,9 +1,13 @@
 <script setup>
 import { request } from '@/utils/request';
-import { onMounted,ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
+import { useInfoStore } from '@/stores/infoStore';
+import { storeToRefs } from 'pinia';
 
 const toast = useToast();
+const infoStore = useInfoStore();
+const { ansTime } = storeToRefs(infoStore);
 
 const props = defineProps({
   date: {
@@ -23,18 +27,17 @@ const fetchActivities = async () => {
   tot.value = 0;
   const start = 1;
   const size = 3;
+  let nowTime = new Date().getTime();
   const res = await request.get(`/activity/${props.date}/${props.date}/${start}/${size}`).then(res => res.data.data).catch(err => {
     toast.error('获取活动列表失败');
     console.log('err', err);
   });
+  let endTime = new Date().getTime();
+  ansTime.value.push(endTime - nowTime);
   records.value = res.records;
   tot.value = res.total;
   loading.value = false;
 }
-
-onMounted(() => {
-  fetchActivities();
-})
 
 watch(() => props.date, () => {
   fetchActivities();

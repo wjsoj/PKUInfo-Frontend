@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref,watch } from 'vue';
+import { computed, onMounted, ref,watch } from 'vue';
 import { ChevronRight, ChevronLeft } from 'lucide-vue-next';
 import moment from 'moment';
 import { request } from '@/utils/request';
@@ -10,7 +10,7 @@ import ActivityDetail from './ActivityDetail.vue';
 import { useInfoStore } from '@/stores/infoStore';
 import { storeToRefs } from 'pinia';
 const infoStore = useInfoStore();
-const { loginStatus } = storeToRefs(infoStore);
+const { loginStatus,ansTime } = storeToRefs(infoStore);
 
 const toast = useToast();
 
@@ -82,6 +82,10 @@ onMounted(() => {
   fetchActivities();
 })
 
+const avgTime = computed(() => {
+  return (ansTime.value.reduce((a, b) => a + b, 0) / ansTime.value.length).toFixed(2);
+})
+
 const isToday = (date) => {
   return moment(date).isSame(moment(), 'day');
 }
@@ -118,7 +122,7 @@ const changeDate = (date) => {
   <input type="checkbox" id="detailinfo" class="modal-toggle" />
   <div class="modal" role="dialog">
     <div class="modal-box">
-      <h3 class="text-xl font-semibold">{{ moment(selectedDate.value).startOf('day').format('YYYY-MM-DD') }}</h3>
+      <h3 class="text-xl font-semibold">{{ moment(selectedDate).format('YYYY-MM-DD') }}</h3>
       <span v-if="loading" class="loading loading-infinity loading-lg"></span>
       <div class="flex flex-col space-y-0 py-10">
         <div v-for="activity in records" :key="activity.id" class="flex flex-col items-center w-full">
@@ -140,8 +144,17 @@ const changeDate = (date) => {
     <label class="modal-backdrop" for="detailinfo">Close</label>
   </div>
 
+<!-- 网站测速 -->
+<div class="w-full flex flex-row space-x-4 lg:space-x-10 justify-center items-center mt-2 text-xs">
+  <p class=" text-base-content/80">已请求{{ ansTime.length }}次</p>
+  <!-- 平均，保留到小数点后1位 -->
+  <p class="text-base-content/80">平均{{ avgTime }}ms</p>
+  <!-- 改变颜色，表示网络状况 -->
+  <p class="text-base-content/80" :class="{'text-success': avgTime < 1000, 'text-warning': avgTime > 1000 && avgTime < 2000,'text-error': avgTime > 2000}">{{ avgTime < 1000 ? '网络良好' : (avgTime < 2000 ? '网络较差' : '网络很差') }}</p>
+</div>
+
   <!-- 主日历 -->
-<div class="w-full bg-base-100 p-4 rounded-lg">
+<div class="w-full bg-base-100 p-4 lg:pt-0 rounded-lg">
   <div class="flex  justify-between gap-0 sm:gap-4">
     <p class="font-semibold text-2xl w-32 lg:w-56">
       {{moment(firstDayOfMonth).format("MM").toString()}}
