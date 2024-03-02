@@ -7,7 +7,7 @@ import { storeToRefs } from 'pinia';
 
 const toast = useToast();
 const infoStore = useInfoStore();
-const { ansTime } = storeToRefs(infoStore);
+const { ansTime,activityList } = storeToRefs(infoStore);
 
 const props = defineProps({
   date: {
@@ -22,6 +22,13 @@ const tot = ref(0);
 
 // /activity/{startDate}/{endDate}/{start}/{size}
 const fetchActivities = async () => {
+  // 缓存
+  let find = activityList.value.find(item => item.date == props.date);
+  if (find) {
+    records.value = find.records;
+    tot.value = find.tot;
+    return;
+  }
   records.value = [];
   loading.value = true;
   tot.value = 0;
@@ -34,6 +41,11 @@ const fetchActivities = async () => {
   });
   let endTime = new Date().getTime();
   ansTime.value.push(endTime - nowTime);
+  activityList.value.push({
+    date: props.date,
+    records: res.records,
+    tot: res.total
+  });
   records.value = res.records;
   tot.value = res.total;
   loading.value = false;
