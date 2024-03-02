@@ -30,6 +30,7 @@ const firstDayOfMonth = ref(moment().startOf('month'));
 const currentMonth = ref(moment(today).format("MMMM-yyyy"));
 const selectedDate = ref(today);
 const records = ref([]);
+const loading = ref(false);
 
 function chooseActivity(activity) {
   request.put(`/view/${activity.id}`)
@@ -60,15 +61,18 @@ const allDaysInMonth = ()=> {
 }
 
 const fetchActivities = async () => {
+  records.value = [];
   const startDate = moment(selectedDate.value).startOf('day').format('YYYY-MM-DD');
   const endDate = moment(selectedDate.value).endOf('day').format('YYYY-MM-DD');
   const start = 1;
   const size = 1000;
+  loading.value = true;
   const res = await request.get(`/activity/${startDate}/${endDate}/${start}/${size}`).then(res => res.data.data).catch(err => {
     toast.error('获取活动列表失败');
     console.log('err', err);
   });
   records.value = res.records;
+  loading.value = false;
 }
 
 watch(selectedDate, () => {
@@ -110,27 +114,33 @@ const changeDate = (date) => {
 </script>
 
 <template>
+  <!-- 活动列表对话框 -->
   <input type="checkbox" id="detailinfo" class="modal-toggle" />
   <div class="modal" role="dialog">
     <div class="modal-box">
-      <div v-for="activity in records" :key="activity.id" class="flex flex-col items-center w-full ">
+      <h3 class="text-xl font-semibold">{{ moment(selectedDate.value).startOf('day').format('YYYY-MM-DD') }}</h3>
+      <span v-if="loading" class="loading loading-infinity loading-lg"></span>
+      <div class="flex flex-col space-y-0 py-10">
+        <div v-for="activity in records" :key="activity.id" class="flex flex-col items-center w-full">
         <div class="flex flex-row justify-between w-full">
-          <div class="grow self-start text-xl font-bold">{{ activity.title }}</div>
+          <div class="grow self-start text-base font-semibold mb-[-8px]">{{ activity.title }}</div>
           <button v-if="loginStatus" class="btn btn-sm btn-primary self-end ml-2" @click="subscribe(activity.id)">订阅</button>
         </div>
         <div tabindex="0" class="collapse"> 
-          <div class="collapse-title text-sm font-medium" @click="chooseActivity(activity)">
-            详情
+          <div class="collapse-title text-sm font-medium text-primary" @click="chooseActivity(activity)">
+            查看详情
           </div>
-          <div class="collapse-content"> 
+          <div class="collapse-content mt-[-8px] mb-6"> 
             <ActivityDetail :activity="activity" />
           </div>
         </div>
+      </div>
       </div>
     </div>
     <label class="modal-backdrop" for="detailinfo">Close</label>
   </div>
 
+  <!-- 主日历 -->
 <div class="w-full bg-base-100 p-4 rounded-lg">
   <div class="flex  justify-between gap-0 sm:gap-4">
     <p class="font-semibold text-2xl w-32 lg:w-56">
@@ -158,7 +168,7 @@ const changeDate = (date) => {
         
   <div class="grid grid-col auto-rows-auto mt-1 place-items-center items-stretch">
     <div v-for="(day, idx) in allDaysInMonth()" :key="idx" :class="colStartClasses[moment(day).day().toString()] + ' border border-solid border-base-content/50 w-full h-16 lg:h-auto'">
-      <p class="flex items-center justify-center h-8 w-8 rounded-full mx-auto lg:mx-1 mt-1 text-sm cursor-pointer "
+      <p class="flex items-center justify-center h-8 w-8 rounded-full mx-auto lg:mx-1 font-semibold mt-1 text-sm cursor-pointer "
       :class="{'bg-primary text-primary-content': isToday(day), 'text-base-content/50': isDifferentMonth(day),'bg-accent text-accent-content': moment(day).isSame(selectedDate, 'day')}"
       @click="selectedDate = day">
         {{ moment(day).format('D') }}
@@ -167,12 +177,14 @@ const changeDate = (date) => {
     </div>
   </div>
 
+  <!-- 小屏日历卡片 -->
   <div class="flex flex-col lg:hidden items-center py-10 space-y-2">
+    <span v-if="loading" class="loading loading-dots loading-lg"></span>
     <div v-for="record in records" :key="record.id">
       <ActivityCard :activity="record" />
     </div>
   </div>
-  <div class="lg:hidden" v-if="records.length == 0">
+  <div class="lg:hidden" v-if="records.length == 0 && !loading">
     <h3 class="text-center text-2xl font-semibold mt-10">No activities</h3>
   </div>
 

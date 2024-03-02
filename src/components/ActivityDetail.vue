@@ -5,7 +5,7 @@ import { map,getFormatTime } from './constant'
 
 <template>
   <!-- 遍历对象 -->
-  <div class="space-y-2 text-sm">
+<div class="space-y-2 text-sm">
   <div class="w-full grid grid-cols-4">
     <p class=" justify-self-start font-semibold" >活动时间</p>
     <p class=" justify-self-start col-span-3" >{{ getFormatTime(activity) }}</p>
@@ -15,5 +15,9 @@ import { map,getFormatTime } from './constant'
     <p class=" justify-self-start font-semibold" v-if="activity[key]">{{ value }}</p>
     <p class=" justify-self-start col-span-3 text-wrap" v-if="activity[key]">{{ activity[key] }}</p>
   </div>
+  <div class="w-full grid grid-cols-4">
+    <p class=" justify-self-start font-semibold" >推送链接</p>
+    <a class=" justify-self-start col-span-3 text-wrap text-info" :href="activity['link']" target="_blank">访问链接</a>
   </div>
+</div>
 </template>

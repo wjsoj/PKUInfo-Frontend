@@ -18,14 +18,18 @@ const page = ref(1);
 const selectedActivity = ref({});
 const today = new Date().toISOString().split('T')[0];
 const tag = ref(0);
+const loading = ref(false);
 let totalPage = 0;
 
 const fetchActivities = async () => {
+  loading.value = true;
+  Activities.value = [];
   if (sortBySub.value) {
     const res = await request.get(`/activity/week/subscribe/${today}/${page.value}/${size.value}`).then(res => res.data.data).catch(err => {
       console.log('err', err);
     });
     Activities.value = res.records;
+    totalPage = res.pages;
   } else {
     const res = await request.get(`/activity/week/view/${today}/${page.value}/${size.value}`).then(res => res.data.data).catch(err => {
       console.log('err', err);
@@ -33,6 +37,7 @@ const fetchActivities = async () => {
     Activities.value = res.records;
     totalPage = res.pages;
   }
+  loading.value = false;
 }
 
 function selectChanged(e) {
@@ -72,6 +77,7 @@ watch(sortBySub, () => {
 </script>
 
 <template>
+<!-- 头部选择框 -->
 <div class="flex flex-col space-y-2 lg:flex-row justify-between mx-4 lg:mx-10 mt-10">
   <label class="input input-bordered w-full lg:w-72 flex items-center gap-2">
     <input type="text" class="grow" placeholder="Search" />
@@ -90,10 +96,13 @@ watch(sortBySub, () => {
   </div>
 </div>
 
+<!-- 大屏，详情对话框 -->
 <dialog id="detail" class="modal">
   <div class="modal-box">
-    <h3 class="font-bold text-lg">Hello!</h3>
-    <p class="py-4">{{ JSON.stringify(selectedActivity) }}</p>
+    <h3 class="font-bold text-lg">{{ selectedActivity.title }}</h3>
+    <div class="pt-4">
+      <ActivityDetail :activity="selectedActivity" />
+    </div>
     <div class="modal-action">
       <button v-if="loginStatus" class="btn btn-primary" @click="subscribe(selectedActivity.id)">订阅</button>
       <form method="dialog">
@@ -106,7 +115,9 @@ watch(sortBySub, () => {
   </form>
 </dialog>
 
+<!-- 大屏，表格 -->
 <div class="hidden lg:block mx-10 my-6 overflow-x-auto">
+  <span v-if="loading" class="loading loading-infinity loading-lg"></span>
   <table class="table table-zebra xl:table-lg">
     <thead>
       <tr>
@@ -128,17 +139,19 @@ watch(sortBySub, () => {
   </div>
 </div>
 
+<!-- 小屏，列表 -->
 <div class="flex lg:hidden flex-col items-center my-10 space-y-2">
+  <span v-if="loading" class="loading loading-infinity loading-lg"></span>
   <div v-for="activity in Activities" :key="activity.id" class="flex flex-col items-center w-full ">
     <div class="flex flex-row justify-between w-full">
       <div class="grow self-start text-lg font-bold px-4">{{ activity.title }}</div>
-      <button v-if="loginStatus" class="btn btn-sm btn-primary self-end ml-2" @click="subscribe(selectedActivity.id)">订阅</button>
+      <button v-if="loginStatus" class="btn btn-xs btn-primary self-end mx-2" @click="subscribe(selectedActivity.id)">订阅</button>
     </div>
     <div tabindex="0" class="collapse"> 
-      <div class="collapse-title text-sm font-medium px-4" @click="chooseActivity(activity)">
-        详情
+      <div class="collapse-title text-sm text-info font-medium px-4 mt-[-8px]" @click="chooseActivity(activity)">
+        查看详情
       </div>
-      <div class="collapse-content"> 
+      <div class="collapse-content mt-[-8px] mb-2"> 
         <ActivityDetail :activity="activity" />
       </div>
     </div>

@@ -18,7 +18,7 @@ const tot = ref(0);
 
 // /activity/{startDate}/{endDate}/{start}/{size}
 const fetchActivities = async () => {
-  records.value = [{id:1,title: "加载中..."}];
+  records.value = [];
   loading.value = true;
   const start = 1;
   const size = 3;
@@ -44,18 +44,16 @@ watch(() => props.date, () => {
 </script>
 
 <template>
-  <div class="flex-col items-center w-full mt-2 lg:flex hidden">
-    <div v-for="activity in records" :key="activity.id" class="w-full bg-base-200 border-l-4 mx-1 px-1 py-1 border-secondary/80">
-      <h3 class="text-sm">{{ activity.title }}</h3>
+  <div class="flex-col items-center w-full h-full pb-12 mb-[-36px] mt-2 lg:flex hidden">
+    <span v-if="loading" class="loading loading-dots loading-md"></span>
+    <div v-for="activity in records " :key="activity.id" class="w-full grow space-y-0">
+      <h3 class="text-xs border-l-4 mx-1 px-1 border-primary/60 ">{{ activity.title }}</h3>
     </div>
-    <div v-if="records.length >3" class="w-full mx-1 px-1 py-1 ">
-      <h3>...</h3>
-    </div>
-    <div v-if="records.length == 0" class="w-full px-1 py-1">
+    <div v-if="records.length == 0 && !loading" class="w-full px-1 py-1">
       <h3>暂无活动</h3>
     </div>
     <div v-if="records.length && !loading" class="w-full px-1 py-1">
-      <label for="detailinfo" class="text-sm cursor-pointer justify-self-end" @click="emit('changeDate')">等{{ tot }}项活动</label>
+      <label for="detailinfo" class="text-sm cursor-pointer text-info font-semibold" @click="emit('changeDate')">等{{ tot }}项活动</label>
     </div> 
   </div>
   <div class=" lg:hidden h-8 w-full text-center bg-base-200">
