@@ -151,7 +151,7 @@ watch(sortBySub, () => {
       <div class="collapse-title text-sm text-info font-medium px-4 mt-[-8px]" @click="chooseActivity(activity)">
         查看详情
       </div>
-      <div class="collapse-content mt-[-8px] mb-2"> 
+      <div class="collapse-content mt-[-8px] mb-3"> 
         <ActivityDetail :activity="activity" />
       </div>
     </div>

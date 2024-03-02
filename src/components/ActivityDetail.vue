@@ -1,6 +1,10 @@
 <script setup>
 const { activity } = defineProps(['activity']);
 import { map,getFormatTime } from './constant'
+
+function gotourl(url) {
+  window.open(url);
+}
 </script>
 
 <template>
@@ -17,7 +21,9 @@ import { map,getFormatTime } from './constant'
   </div>
   <div class="w-full grid grid-cols-4">
     <p class=" justify-self-start font-semibold" >推送链接</p>
-    <a class=" justify-self-start col-span-3 text-wrap text-info" :href="activity['link']" target="_blank">访问链接</a>
+    <a class=" justify-self-start hidden lg:block col-span-3 text-wrap text-info" :href="activity['link']" target="_blank">访问链接</a>
+    <!-- 访问链接 -->
+    <p class=" justify-self-start lg:hidden col-span-3 text-wrap text-info" @click="gotourl(activity['link'])" >访问链接</p>
   </div>
 </div>
 </template>

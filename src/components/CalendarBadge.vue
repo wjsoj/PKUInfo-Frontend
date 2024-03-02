@@ -20,6 +20,7 @@ const tot = ref(0);
 const fetchActivities = async () => {
   records.value = [];
   loading.value = true;
+  tot.value = 0;
   const start = 1;
   const size = 3;
   const res = await request.get(`/activity/${props.date}/${props.date}/${start}/${size}`).then(res => res.data.data).catch(err => {
@@ -56,8 +57,9 @@ watch(() => props.date, () => {
       <label for="detailinfo" class="text-sm cursor-pointer text-info font-semibold" @click="emit('changeDate')">等{{ tot }}项活动</label>
     </div> 
   </div>
-  <div class=" lg:hidden h-8 w-full text-center bg-base-200">
+  <div class=" lg:hidden h-[25px] w-full text-center bg-base-200">
+    <span v-if="loading" class="loading loading-ball loading-sm"></span>
     <span v-if="tot> 0" class="font-extrabold text-primary">{{ tot }}</span>
-    <span v-else class="text-xs text-base-content/60">暂无</span>
+    <span v-if="tot==0 && !loading" class="text-xs text-base-content/60">暂无</span>
   </div>
 </template>

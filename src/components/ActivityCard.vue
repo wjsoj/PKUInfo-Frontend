@@ -17,7 +17,7 @@ async function viewMore() {
 </script>
 
 <template>
-<div class="card w-full border-neutral border-2 relative bg-base-200 shadow-lg">
+<div class="card w-full border-neutral border-2 relative bg-base-200/40 shadow-lg">
   <div class="card-body py-6 px-6 items-center text-center z-10">
     <div class="w-full flex justify-between items-center">
       <h2 class="card-title text-start hyphens-auto">{{ activity.title }}</h2>
