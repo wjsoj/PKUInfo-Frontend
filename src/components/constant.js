@@ -31,4 +31,8 @@ export const getFormatTime = (activity) => {
   return time;
 }
 
-export default { map,tag_list,getFormatTime }
+export const getTagList = (tag) => {
+  return tag.split('+');
+}
+
+export default { map,tag_list,getFormatTime,getTagList }

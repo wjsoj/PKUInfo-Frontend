@@ -25,13 +25,13 @@ const fetchActivities = async () => {
   loading.value = true;
   Activities.value = [];
   if (sortBySub.value) {
-    const res = await request.get(`/activity/week/subscribe/${today}/${page.value}/${size.value}`).then(res => res.data.data).catch(err => {
+    const res = await request.get(`/activity/week/subscribe/${today}/${page.value}/${size.value}/${tag.value}`).then(res => res.data.data).catch(err => {
       console.log('err', err);
     });
     Activities.value = res.records;
     totalPage = res.pages;
   } else {
-    const res = await request.get(`/activity/week/view/${today}/${page.value}/${size.value}`).then(res => res.data.data).catch(err => {
+    const res = await request.get(`/activity/week/view/${today}/${page.value}/${size.value}/${tag.value}`).then(res => res.data.data).catch(err => {
       console.log('err', err);
     });
     Activities.value = res.records;
@@ -72,6 +72,9 @@ watch(page, () => {
   fetchActivities();
 })
 watch(sortBySub, () => {
+  fetchActivities();
+})
+watch(tag, () => {
   fetchActivities();
 })
 </script>
@@ -116,19 +119,27 @@ watch(sortBySub, () => {
 </dialog>
 
 <!-- 大屏，表格 -->
-<div class="hidden lg:block mx-10 my-6 overflow-x-auto">
-  <span v-if="loading" class="loading loading-infinity loading-lg"></span>
+<div class="hidden lg:block mx-10 mb-20 overflow-x-auto">
   <table class="table table-zebra xl:table-lg">
     <thead>
       <tr>
         <th>活动名称</th>
+        <!-- <th>活动标签</th> -->
         <th>活动日期</th>
         <th>活动信息</th>
       </tr>
     </thead>
     <tbody>
+      <tr v-if="loading">
+        <td colspan="3" class="text-center">
+          <span class="loading loading-dots loading-lg"></span>
+        </td>
+      </tr>
       <tr v-for="activity in Activities" :key="activity.id">
         <td class=" cursor-pointer font-semibold" onclick="detail.showModal()" @click="chooseActivity(activity)">{{ activity.title }}</td>
+        <!-- <td class="text-sm space-y-1">
+          <span v-for="tag in getTagList(activity.tags)" :key="tag" class="badge badge-sm badge-primary">{{ tag }}</span>
+        </td> -->
         <td class="text-sm text-base-content/80">{{ getFormatTime(activity) }}</td>
         <td class="text-sm">{{ activity.description }}</td>
       </tr>

@@ -24,7 +24,7 @@ async function viewMore() {
       <span class="badge badge-accent">{{ activity.type }}</span>
     </div>
     <div v-if="!isShow" class="w-full flex flex-col items-start">
-      <p class="justify-self-start">活动详情：</p>
+      <p class="justify-self-start text-start">活动详情：</p>
       <p class=" col-span-2 justify-self-start text-sm text-base-content/80 line-clamp-3">{{ activity.description }}</p>
     </div>
       <div v-if="isShow" class="w-full grid grid-cols-3">

@@ -21,9 +21,8 @@ function gotourl(url) {
   </div>
   <div class="w-full grid grid-cols-4">
     <p class=" justify-self-start font-semibold" >推送链接</p>
-    <a class=" justify-self-start hidden lg:block col-span-3 text-wrap text-info" :href="activity['link']" target="_blank">访问链接</a>
     <!-- 访问链接 -->
-    <p class=" justify-self-start lg:hidden col-span-3 text-wrap text-info" @click="gotourl(activity['link'])" >访问链接</p>
+    <p class=" justify-self-start cursor-pointer col-span-3 text-wrap text-info" @click="gotourl(activity['link'])" >访问链接</p>
   </div>
 </div>
 </template>
