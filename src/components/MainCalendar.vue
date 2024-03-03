@@ -67,7 +67,7 @@ const fetchActivities = async () => {
   const start = 1;
   const size = 1000;
   loading.value = true;
-  const res = await request.get(`/activity/${startDate}/${endDate}/${start}/${size}`).then(res => res.data.data).catch(err => {
+  const res = await request.get(`/activity/${startDate}/${endDate}/${start}/${size}/0`).then(res => res.data.data).catch(err => {
     toast.error('获取活动列表失败');
     console.log('err', err);
   });

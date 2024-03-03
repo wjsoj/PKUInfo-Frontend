@@ -35,7 +35,7 @@ const fetchActivities = async () => {
   const start = 1;
   const size = 3;
   let nowTime = new Date().getTime();
-  const res = await request.get(`/activity/${props.date}/${props.date}/${start}/${size}`).then(res => res.data.data).catch(err => {
+  const res = await request.get(`/activity/${props.date}/${props.date}/${start}/${size}/0`).then(res => res.data.data).catch(err => {
     toast.error('获取活动列表失败');
     console.log('err', err);
   });
