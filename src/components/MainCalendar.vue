@@ -166,7 +166,7 @@ const changeDate = (date) => {
       <span class="font-normal text-base pl-2">{{ moment(firstDayOfMonth).format("YYYY").toString() }}</span>
     </p>
 
-    <div>
+    <div class="flex flex-row items-center">
       <button class="btn btn-square btn-sm btn-ghost"  @click="getPrevMonth">
         <ChevronLeft class="w-4 h-4" />
       </button>

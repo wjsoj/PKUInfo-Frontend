@@ -28,6 +28,11 @@ function signout() {
   });
 }
 
+// 将当前路由导航高亮
+function activeClass(route) {
+  return router.currentRoute.value.path === route ? 'active' : '';
+}
+
 function closeDropdown() {
   navdropdown.value.removeAttribute('open');
 }
@@ -56,17 +61,17 @@ onMounted(() => {
         <summary class="btn btn-ghost lg:hidden">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
         </summary>
-        <ul class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box mt-3 w-32" @click="closeDropdown">
+        <ul class="menu dropdown-content z-[1] p-2 shadow bg-base-200 rounded-sm mt-3 w-28" @click="closeDropdown">
           <li>
             <RouterLink to="/">活动列表</RouterLink></li>
           <li>
-            <RouterLink to="/calendar">活动日历</RouterLink>
+            <RouterLink to="/calendar" >活动日历</RouterLink>
           </li>
           <li>
-            <RouterLink to="/profile">订阅活动</RouterLink>
+            <RouterLink to="/profile" replace>订阅活动</RouterLink>
           </li>
           <li>
-            <RouterLink to="/about">关于</RouterLink>
+            <RouterLink to="/about" replace>关于</RouterLink>
           </li>
         </ul>
       </details>
@@ -77,10 +82,10 @@ onMounted(() => {
 
     <div class="navbar-end">
       <div class="hidden lg:flex flex-row space-x-4 mr-6">
-        <RouterLink class="font-semibold hover:underline underline-offset-8" to="/" replace>活动列表</RouterLink>
-        <RouterLink class="font-semibold hover:underline underline-offset-8" to="/calendar" replace>活动日历</RouterLink>
-        <RouterLink class="font-semibold hover:underline underline-offset-8" to="/profile">订阅活动</RouterLink>
-        <RouterLink class="font-semibold hover:underline underline-offset-8" to="/about" replace>关于</RouterLink>
+        <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/')" to="/" replace>活动列表</RouterLink>
+        <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/calendar')" to="/calendar" replace>活动日历</RouterLink>
+        <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/profile')" to="/profile">订阅活动</RouterLink>
+        <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/about')" to="/about" replace>关于</RouterLink>
       </div>
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn bg-base-300 border-none m-1">
@@ -97,12 +102,12 @@ onMounted(() => {
       </div>
 
       <details ref="avatardropdown" class="dropdown dropdown-end">
-        <summary class="btn btn-ghost btn-circle avatar">
-          <div class="w-8 rounded-full">
+        <summary class="btn btn-ghost btn-circle avatar" :class="loginStatus ? 'online':'offline'">
+          <div class="w-8 rounded-full" >
             <img alt="avatar" src="/favicon.png" />
           </div>
         </summary>
-        <ul class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-32" @click="closeavatar">
+        <ul class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-200 rounded-sm w-32" @click="closeavatar">
           <li><RouterLink to="/profile">订阅活动</RouterLink></li>
           <li v-if="loginStatus"><a @click="signout">注销</a></li>
           <li v-else><RouterLink to="/login">登录</RouterLink></li>
@@ -111,3 +116,10 @@ onMounted(() => {
     </div>
   </nav>
 </template>
+
+<style scoped>
+a.active {
+  color:  oklch(var(--p));
+  scale: 1.05;
+}
+</style>
