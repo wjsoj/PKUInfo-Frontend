@@ -34,7 +34,7 @@ onMounted(() => {
   <div class="grow flex flex-col ">
     <RouterView />
     <!-- backtotop button  -->
-    <div class="fixed bottom-4 lg:bottom-12 right-4 cursor-pointer z-50" id="backTop">
+    <div class="hidden fixed bottom-4 lg:bottom-12 right-4 cursor-pointer z-50" id="backTop">
       <button class="btn btn-circle btn-accent bg-opacity-70" @click="scrollToTop">
         <ArrowBigUpDash />
       </button>
