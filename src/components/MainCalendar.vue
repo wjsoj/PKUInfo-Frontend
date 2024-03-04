@@ -8,6 +8,7 @@ import CalendarBadge from './CalendarBadge.vue';
 import ActivityCard from './ActivityCard.vue';
 import ActivityDetail from './ActivityDetail.vue';
 import { useInfoStore } from '@/stores/infoStore';
+import { checkDate,getTagList } from './constant';
 import { storeToRefs } from 'pinia';
 const infoStore = useInfoStore();
 const { loginStatus,ansTime } = storeToRefs(infoStore);
@@ -124,19 +125,21 @@ const changeDate = (date) => {
     <div class="modal-box">
       <h3 class="text-xl font-semibold">{{ moment(selectedDate).format('YYYY-MM-DD') }}</h3>
       <span v-if="loading" class="loading loading-infinity loading-lg"></span>
-      <div class="flex flex-col space-y-0 py-10">
+      <div class="flex flex-col space-y-0 pt-10">
         <div v-for="activity in records" :key="activity.id" class="flex flex-col items-center w-full">
-        <div class="flex flex-row justify-between w-full mb-[-8px]">
-          <div class="grow self-start text-base font-semibold">{{ activity.title }}</div>
-          <div class="flex flex-row space-x-2 items-center shrink-0 ml-1">
-            <div class="badge badge-secondary badge-outline text-nowrap" v-if="activity.tags">
-            {{ activity.tags.slice(0, 2)}}
+        <div class="flex flex-row justify-between w-full ml-4 mb-[-8px]">
+          <div class="flex flex-col space-y-2">
+            <div class="grow self-start text-lg font-semibold">{{ activity.title }}</div>
+            <div v-if="activity.tags" class="flex flex-row space-x-2 shrink-0 ">
+              <span v-for="tag in getTagList(activity.tags)" :key="tag" class="badge badge-outline badge-primary">{{ tag }}</span>
             </div>
-            <button v-if="loginStatus" class="btn btn-sm btn-primary btn-outline" @click="subscribe(activity.id)">订阅</button>
+          </div>
+          <div class="flex flex-row space-x-2 items-center shrink-0 ml-1">
+            <button v-if="loginStatus && checkDate(activity.startDate)" class="btn btn-sm btn-primary btn-outline" @click="subscribe(activity.id)">订阅</button>
           </div>
         </div>
         <div tabindex="0" class="collapse"> 
-          <div class="collapse-title text-sm font-medium text-primary" @click="chooseActivity(activity)">
+          <div class="collapse-title text-base font-medium text-primary" @click="chooseActivity(activity)">
             查看详情
           </div>
           <div class="collapse-content mt-[-8px] mb-6"> 

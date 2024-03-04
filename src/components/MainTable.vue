@@ -102,7 +102,10 @@ watch(tag, () => {
 <!-- 大屏，详情对话框 -->
 <dialog id="detail" class="modal">
   <div class="modal-box">
-    <h3 class="font-bold text-lg">{{ selectedActivity.title }}</h3>
+    <h3 class="font-bold text-xl">{{ selectedActivity.title }}</h3>
+    <div v-if="selectedActivity.tags" class="flex flex-row space-x-2 shrink-0 mt-2">
+      <span v-for="tag in getTagList(selectedActivity.tags)" :key="tag" class="badge badge-outline badge-primary">{{ tag }}</span>
+    </div>
     <div class="pt-4">
       <ActivityDetail :activity="selectedActivity" />
     </div>
@@ -157,12 +160,14 @@ watch(tag, () => {
   <span v-if="loading" class="loading loading-infinity loading-lg"></span>
   <div v-for="activity in Activities" :key="activity.id" class="flex flex-col items-center w-full ">
     <div class="flex flex-row justify-between items-center w-full pl-4 pr-2">
-      <div class="self-start hyphens-auto text-lg font-bold">{{ activity.title }}</div>
-      <div class="flex flex-col shrink-0 space-y-2">
-        <div class="badge badge-sm badge-outline badge-primary text-nowrap" v-if="activity.tags">
-        {{ activity.tags.slice(0, 2)}}
+      <div class="flex flex-col space-y-2">
+        <div class="self-start hyphens-auto text-lg font-bold">{{ activity.title }}</div>
+        <div v-if="activity.tags" class="flex flex-row space-x-2 shrink-0">
+          <span v-for="tag in getTagList(activity.tags)" :key="tag" class="badge badge-sm badge-outline badge-primary">{{ tag }}</span>
         </div>
-        <button v-if="loginStatus" class="btn btn-xs btn-primary self-end" @click="subscribe(activity.id)">订阅</button>
+      </div>
+      <div class="flex flex-row items-center shrink-0 ml-1">
+        <button v-if="loginStatus" class="btn btn-xs btn-primary" @click="subscribe(activity.id)">订阅</button>
       </div>
     </div>
     <div tabindex="0" class="collapse"> 

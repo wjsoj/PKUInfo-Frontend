@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const map = {
   'address': '活动地点',
   'college': '举办单位',
@@ -35,4 +37,14 @@ export const getTagList = (tag) => {
   return tag.split('+');
 }
 
-export default { map,tag_list,getFormatTime,getTagList }
+// 如果是过去，返回false，大于等于今天返回true
+export const checkDate = (date) => {
+  let nowDate = moment().format('YYYY-MM-DD');
+  if (date >= nowDate) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export default { map,tag_list,getFormatTime,getTagList,checkDate }
