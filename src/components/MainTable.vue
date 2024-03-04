@@ -4,7 +4,7 @@ import { onMounted, ref, watch } from 'vue';
 import { useInfoStore } from '@/stores/infoStore';
 import { storeToRefs } from 'pinia';
 import { useToast } from 'vue-toastification';
-import { tag_list,getFormatTime } from './constant';
+import { tag_list,getFormatTime,getTagList } from './constant';
 import ActivityDetail from './ActivityDetail.vue';
 
 const toast = useToast();
@@ -19,7 +19,7 @@ const selectedActivity = ref({});
 const today = new Date().toISOString().split('T')[0];
 const tag = ref(0);
 const loading = ref(false);
-let totalPage = 0;
+let totalPage = ref(0);
 
 const fetchActivities = async () => {
   loading.value = true;
@@ -29,13 +29,13 @@ const fetchActivities = async () => {
       console.log('err', err);
     });
     Activities.value = res.records;
-    totalPage = res.pages;
+    totalPage.value = res.pages;
   } else {
     const res = await request.get(`/activity/week/view/${today}/${page.value}/${size.value}/${tag.value}`).then(res => res.data.data).catch(err => {
       console.log('err', err);
     });
     Activities.value = res.records;
-    totalPage = res.pages;
+    totalPage.value = res.pages;
   }
   loading.value = false;
 }
@@ -48,15 +48,15 @@ function selectChanged(e) {
   }
 }
 
-function chooseActivity(activity) {
+async function chooseActivity(activity) {
   selectedActivity.value = activity;
-  request.put(`/view/${activity.id}`)
+  await request.put(`/view/${activity.id}`)
     .catch(err => {
       console.log('err', err);
     });
 }
-function subscribe(id) {
-  request.put(`/auth/subscribe/${id}`)
+async function subscribe(id) {
+  await request.put(`/auth/subscribe/${id}`)
     .then(() => {
       toast.success('订阅成功');
     })
@@ -119,12 +119,12 @@ watch(tag, () => {
 </dialog>
 
 <!-- 大屏，表格 -->
-<div class="hidden lg:block mx-10 mb-20 overflow-x-auto">
+<div class="hidden lg:flex flex-col items-center mx-10 mb-10 overflow-x-auto">
   <table class="table table-zebra xl:table-lg">
     <thead>
       <tr>
         <th>活动名称</th>
-        <!-- <th>活动标签</th> -->
+        <th>活动标签</th>
         <th>活动日期</th>
         <th>活动信息</th>
       </tr>
@@ -137,15 +137,17 @@ watch(tag, () => {
       </tr>
       <tr v-for="activity in Activities" :key="activity.id">
         <td class=" cursor-pointer font-semibold" onclick="detail.showModal()" @click="chooseActivity(activity)">{{ activity.title }}</td>
-        <!-- <td class="text-sm space-y-1">
-          <span v-for="tag in getTagList(activity.tags)" :key="tag" class="badge badge-sm badge-primary">{{ tag }}</span>
-        </td> -->
+        <td class="text-sm space-y-1">
+          <div v-if="activity.tags">
+            <span v-for="tag in getTagList(activity.tags)" :key="tag" class="badge badge-sm badge-outline badge-primary">{{ tag }}</span>
+          </div>
+        </td>
         <td class="text-sm text-base-content/80">{{ getFormatTime(activity) }}</td>
         <td class="text-sm">{{ activity.description }}</td>
       </tr>
     </tbody>
   </table>
-  <div class="join" v-if="totalPage > 1">
+  <div class="join mt-4" v-if="totalPage > 1">
     <button v-for="index in totalPage" :key="index" @click="page = index" :class="page === index ? 'btn btn-active join-item' : 'btn join-item'">{{ index }}</button>
   </div>
 </div>
@@ -154,9 +156,14 @@ watch(tag, () => {
 <div class="flex lg:hidden flex-col items-center my-10 space-y-2">
   <span v-if="loading" class="loading loading-infinity loading-lg"></span>
   <div v-for="activity in Activities" :key="activity.id" class="flex flex-col items-center w-full ">
-    <div class="flex flex-row justify-between w-full">
-      <div class="grow self-start text-lg font-bold px-4">{{ activity.title }}</div>
-      <button v-if="loginStatus" class="btn btn-xs btn-primary self-end mx-2" @click="subscribe(selectedActivity.id)">订阅</button>
+    <div class="flex flex-row justify-between items-center w-full pl-4 pr-2">
+      <div class="self-start hyphens-auto text-lg font-bold">{{ activity.title }}</div>
+      <div class="flex flex-col shrink-0 space-y-2">
+        <div class="badge badge-sm badge-outline badge-primary text-nowrap" v-if="activity.tags">
+        {{ activity.tags.slice(0, 2)}}
+        </div>
+        <button v-if="loginStatus" class="btn btn-xs btn-primary self-end" @click="subscribe(selectedActivity.id)">订阅</button>
+      </div>
     </div>
     <div tabindex="0" class="collapse"> 
       <div class="collapse-title text-sm text-info font-medium px-4 mt-[-8px]" @click="chooseActivity(activity)">
@@ -166,6 +173,9 @@ watch(tag, () => {
         <ActivityDetail :activity="activity" />
       </div>
     </div>
+  </div>
+  <div class="join" v-if="totalPage > 1">
+    <button v-for="index in totalPage" :key="index" @click="page = index" :class="page === index ? 'btn btn-active join-item btn-sm' : 'btn join-item btn-sm'">{{ index }}</button>
   </div>
 </div>
 </template>

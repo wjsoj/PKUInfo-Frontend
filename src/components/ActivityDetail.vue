@@ -1,9 +1,15 @@
 <script setup>
 const { activity } = defineProps(['activity']);
 import { map,getFormatTime } from './constant'
+import { useToast } from 'vue-toastification';
+const toast = useToast();
 
 function gotourl(url) {
-  window.open(url);
+  if (url){
+    window.open(url);
+  } else {
+    toast.warning('链接为空');
+  }
 }
 </script>
 

@@ -32,14 +32,14 @@ const selectedDate = ref(today);
 const records = ref([]);
 const loading = ref(false);
 
-function chooseActivity(activity) {
-  request.put(`/view/${activity.id}`)
+async function chooseActivity(activity) {
+  await request.put(`/view/${activity.id}`)
     .catch(err => {
       console.log('err', err);
     });
 }
-function subscribe(id) {
-  request.put(`/auth/subscribe/${id}`)
+async function subscribe(id) {
+  await request.put(`/auth/subscribe/${id}`)
     .then(() => {
       toast.success('订阅成功');
     })
@@ -126,9 +126,14 @@ const changeDate = (date) => {
       <span v-if="loading" class="loading loading-infinity loading-lg"></span>
       <div class="flex flex-col space-y-0 py-10">
         <div v-for="activity in records" :key="activity.id" class="flex flex-col items-center w-full">
-        <div class="flex flex-row justify-between w-full">
-          <div class="grow self-start text-base font-semibold mb-[-8px]">{{ activity.title }}</div>
-          <button v-if="loginStatus" class="btn btn-sm btn-primary self-end ml-2" @click="subscribe(activity.id)">订阅</button>
+        <div class="flex flex-row justify-between w-full mb-[-8px]">
+          <div class="grow self-start text-base font-semibold">{{ activity.title }}</div>
+          <div class="flex flex-row space-x-2 items-center shrink-0 ml-1">
+            <div class="badge badge-secondary badge-outline text-nowrap" v-if="activity.tags">
+            {{ activity.tags.slice(0, 2)}}
+            </div>
+            <button v-if="loginStatus" class="btn btn-sm btn-primary btn-outline" @click="subscribe(selectedActivity.id)">订阅</button>
+          </div>
         </div>
         <div tabindex="0" class="collapse"> 
           <div class="collapse-title text-sm font-medium text-primary" @click="chooseActivity(activity)">
@@ -141,7 +146,7 @@ const changeDate = (date) => {
       </div>
       </div>
     </div>
-    <label class="modal-backdrop" for="detailinfo">Close</label>
+    <label class="modal-backdrop" for="detailinfo">关闭</label>
   </div>
 
 <!-- 网站测速 -->
@@ -166,7 +171,7 @@ const changeDate = (date) => {
         <ChevronLeft class="w-4 h-4" />
       </button>
       <button class="btn btn-sm btn-ghost normal-case" @click="getCurrentMonth">
-      Current Month</button>
+      回到当月</button>
       <button class="btn btn-square btn-sm btn-ghost" @click="getNextMonth">
         <ChevronRight class="w-4 h-4" />
       </button>
@@ -198,7 +203,7 @@ const changeDate = (date) => {
     </div>
   </div>
   <div class="lg:hidden" v-if="records.length == 0 && !loading">
-    <h3 class="text-center text-2xl font-semibold mt-10">No activities</h3>
+    <h3 class="text-center text-2xl font-semibold mt-8">暂无活动s</h3>
   </div>
 
 </div>
