@@ -162,7 +162,7 @@ watch(tag, () => {
         <div class="badge badge-sm badge-outline badge-primary text-nowrap" v-if="activity.tags">
         {{ activity.tags.slice(0, 2)}}
         </div>
-        <button v-if="loginStatus" class="btn btn-xs btn-primary self-end" @click="subscribe(selectedActivity.id)">订阅</button>
+        <button v-if="loginStatus" class="btn btn-xs btn-primary self-end" @click="subscribe(activity.id)">订阅</button>
       </div>
     </div>
     <div tabindex="0" class="collapse"> 
