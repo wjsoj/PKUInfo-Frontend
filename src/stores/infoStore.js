@@ -8,5 +8,9 @@ export const useInfoStore = defineStore('infoStore', () => {
   if (sessionStorage.getItem('auth')) {
     loginStatus.value = true
   }
+  if (localStorage.getItem('auth')) {
+    loginStatus.value = true
+    sessionStorage.setItem('auth',localStorage.getItem('auth'))
+  }
   return { loginStatus,ansTime,activityList }
 })

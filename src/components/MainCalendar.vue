@@ -206,7 +206,7 @@ const changeDate = (date) => {
     </div>
   </div>
   <div class="lg:hidden" v-if="records.length == 0 && !loading">
-    <h3 class="text-center text-2xl font-semibold mt-8">暂无活动</h3>
+    <h3 class="text-center text-2xl font-semibold mt-2">暂无活动</h3>
   </div>
 
 </div>

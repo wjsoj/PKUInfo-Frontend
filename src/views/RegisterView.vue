@@ -2,13 +2,14 @@
 import { reactive, ref } from 'vue';
 import { request } from '@/utils/request';
 import { useToast } from 'vue-toastification';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { Mail } from 'lucide-vue-next';
 import { encrypt } from '@/utils/aes';
 import { Eye, EyeOff } from 'lucide-vue-next';
 import zxcvbn from 'zxcvbn';
 const toast = useToast();
 const router = useRouter();
+const route = useRoute();
 
 const user = reactive({
   username: '',
@@ -36,7 +37,13 @@ async function signup() {
   }).then((res) => {
     if (res.data.code === 200) {
       toast.success('注册成功')
-      router.replace('/login?username='+user.username)
+      router.replace({
+        path: "/login",
+        query: {
+          username: user.username,
+          redirect: route.query.redirect ? route.query.redirect : '/'
+        }
+      })
     }
     else {
       if (res.data.code === 400) {
@@ -83,7 +90,7 @@ async function signup() {
     </div>
     <div class="flex flex-row justify-center items-center space-x-4">
       <button class="btn btn-accent text-accent-content px-8" @click="signup">注册</button>
-    <button class="btn btn-ghost" @click="router.push('/login')">返回登录</button>
+    <button class="btn btn-ghost" @click="router.replace('/login')">返回登录</button>
     </div>
   </div>
 </template>

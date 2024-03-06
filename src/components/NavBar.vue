@@ -19,8 +19,11 @@ function signout() {
   loginStatus.value = false;
   sessionStorage.removeItem('auth');
   sessionStorage.removeItem('token');
-  // 如果是在/settings页面登出，登出后跳转到/login页面
-  if (router.currentRoute.value.path === '/settings' || router.currentRoute.value.path === '/profile') {
+  sessionStorage.removeItem('admin')
+  if (localStorage.getItem('auth')) {
+    localStorage.removeItem('auth');
+  }
+  if (router.currentRoute.value.path === '/profile') {
     router.replace('/');
   }
   toast.info('注销成功',{
@@ -41,7 +44,7 @@ function closeavatar() {
 }
 
 onMounted(() => {
-  console.log('loginStatus', loginStatus.value);
+  // console.log('loginStatus', loginStatus.value);
   // 当dropdown打开时，点击其他地方关闭dropdown
   document.addEventListener('click', (e) => {
     if (navdropdown.value && !navdropdown.value.contains(e.target)) {
