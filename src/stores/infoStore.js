@@ -13,6 +13,7 @@ export const useInfoStore = defineStore('infoStore', () => {
     }).then((res) => {
       if (res.data.code === 200) {
         sessionStorage.setItem('auth', res.data.data.token)
+        loginStatus.value = true
       } else  {
         console.log(res)
       }
