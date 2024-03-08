@@ -39,12 +39,12 @@ watch(isCalendarView, (val) => {
 
 <template>
 <div class="mx-auto flex space-x-3 items-center my-4">
-  <p class="cursor-pointer" :class="{'font-semibold' : isCalendarView==false}" @click="isCalendarView = false">列表视图</p>
-  <input type="checkbox" class="toggle " v-model="isCalendarView" />
-  <p class="cursor-pointer" :class="{'font-semibold' : isCalendarView==true}" @click="isCalendarView = true">日历视图</p>
+  <p class="cursor-pointer text-sm lg:text-base" :class="{'font-semibold' : isCalendarView==false}" @click="isCalendarView = false">列表视图</p>
+  <input type="checkbox" class="toggle toggle-md" v-model="isCalendarView" />
+  <p class="cursor-pointer text-sm lg:text-base" :class="{'font-semibold' : isCalendarView==true}" @click="isCalendarView = true">日历视图</p>
 </div>
-<div class="flex flex-col items-center px-4 my-10">
-  <div v-if="!isCalendarView" class="max-w-screen-sm">
+<div class="flex flex-col items-center">
+  <div v-if="!isCalendarView" class="max-w-screen-sm px-4 my-10">
     <div v-for="activity in SubcribedList" :key="activity.id" class="flex flex-col items-center">
       <p class=" self-start text-xs lg:text-sm">{{ activity.startDate }}</p>
       <div class="flex flex-row justify-between w-full">

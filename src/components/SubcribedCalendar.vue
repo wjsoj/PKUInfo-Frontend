@@ -76,7 +76,7 @@ const getNextMonth = () => {
 </script>
 
 <template>
-<div class="w-full lg:w-screen lg:px-10 lg:space-x-4 bg-base-100 p-4 lg:pt-0 flex flex-col lg:grid lg:grid-cols-2 items-center lg:justify-items-center">
+<div class="w-full lg:w-screen lg:px-10 lg:space-x-4 bg-base-100 p-4 flex flex-col lg:grid lg:grid-cols-2 items-center lg:justify-items-center">
   <div class="lg:self-start">
     <div class="flex justify-between gap-0 sm:gap-4">
       <p class="font-semibold text-2xl w-32">
@@ -121,7 +121,7 @@ const getNextMonth = () => {
     <div class="flex max-w-screen-sm flex-col items-center py-10 space-y-2">
       <div v-for="record in SubcribedList.filter(item => moment(item.startDate).isSame(selectedDate, 'day'))" :key="record.id" class="relative">
         <ActivityCard :activity="record"/>
-        <button class="btn btn-xs btn-primary absolute rounded-box cursor-pointer top-0.5 right-0.5 z-10" @click="unsubscribe(record.id)">取消订阅</button>
+        <button class="btn btn-xs btn-primary btn-outline absolute rounded-box cursor-pointer top-0.5 right-0.5 z-10" @click="unsubscribe(record.id)">取消订阅</button>
       </div>
     </div>
     <div v-if="SubcribedList.filter(item => moment(item.startDate).isSame(selectedDate, 'day')).length == 0">
