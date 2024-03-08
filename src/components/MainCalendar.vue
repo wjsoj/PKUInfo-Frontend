@@ -32,12 +32,16 @@ const currentMonth = ref(moment(today).format("MMMM-yyyy"));
 const selectedDate = ref(today);
 const records = ref([]);
 const loading = ref(false);
+const selectedActivity = ref({});
 
 async function chooseActivity(activity) {
-  await request.put(`/view/${activity.id}`)
-    .catch(err => {
-      console.log('err', err);
-    });
+  if (selectedActivity.value.id !== activity.id) {
+    selectedActivity.value = activity;
+    await request.put(`/view/${activity.id}`)
+      .catch(err => {
+        console.log('err', err);
+      });
+  }
 }
 async function subscribe(id) {
   await request.put(`/auth/subscribe/${id}`)
@@ -162,7 +166,7 @@ const changeDate = (date) => {
 </div>
 
   <!-- 主日历 -->
-<div class="w-full bg-base-100 p-4 lg:pt-0 rounded-lg">
+<div class="w-full bg-base-100 p-4 lg:pt-0 ">
   <div class="flex  justify-between gap-0 sm:gap-4">
     <p class="font-semibold text-2xl w-32 lg:w-56">
       {{moment(firstDayOfMonth).format("MM").toString()}}
@@ -190,7 +194,7 @@ const changeDate = (date) => {
   <div class="grid grid-col auto-rows-auto mt-1 place-items-center items-stretch">
     <div v-for="(day, idx) in allDaysInMonth()" :key="idx" :class="colStartClasses[moment(day).day().toString()] + ' border border-solid border-base-content/50 w-full h-16 lg:h-auto'">
       <p class="flex items-center justify-center h-8 w-8 rounded-full mx-auto lg:mx-1 font-semibold mt-1 text-sm cursor-pointer "
-      :class="{'bg-primary text-primary-content': isToday(day), 'text-base-content/50': isDifferentMonth(day),'bg-accent text-accent-content': moment(day).isSame(selectedDate, 'day')}"
+      :class="{'text-base-content/50': isDifferentMonth(day),'bg-accent text-accent-content': moment(day).isSame(selectedDate, 'day'),'bg-primary text-primary-content': isToday(day)&&!moment(day).isSame(selectedDate, 'day')}"
       @click="selectedDate = day">
         {{ moment(day).format('D') }}
       </p>

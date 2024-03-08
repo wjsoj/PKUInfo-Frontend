@@ -35,7 +35,8 @@ async function signin() {
       loginStatus.value = true
       sessionStorage.setItem('auth', res.data.data.token)
       if (isConstant.value) {
-        localStorage.setItem('auth', res.data.data.token)
+        localStorage.setItem('username', user.username)
+        localStorage.setItem('password', encrypt(user.password))
       }
       toast.success('登录成功')
       if (route.query.redirect) {

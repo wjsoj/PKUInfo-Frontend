@@ -14,14 +14,15 @@ const infoStore = useInfoStore();
 const { loginStatus } = storeToRefs(infoStore);
 const navdropdown = ref(null);
 const avatardropdown = ref(null);
+const isOpen = ref(false);
 
 function signout() {
   loginStatus.value = false;
   sessionStorage.removeItem('auth');
-  sessionStorage.removeItem('token');
   sessionStorage.removeItem('admin')
-  if (localStorage.getItem('auth')) {
-    localStorage.removeItem('auth');
+  if (localStorage.getItem('username')) {
+    localStorage.removeItem('username')
+    localStorage.removeItem('password')
   }
   if (router.currentRoute.value.path === '/profile') {
     router.replace('/');
@@ -38,6 +39,7 @@ function activeClass(route) {
 
 function closeDropdown() {
   navdropdown.value.removeAttribute('open');
+  isOpen.value = false;
 }
 function closeavatar() {
   avatardropdown.value.removeAttribute('open');
@@ -61,8 +63,10 @@ onMounted(() => {
   <nav class="navbar bg-base-300">
     <div class="flex flex-1">
       <details ref="navdropdown" class="dropdown">
-        <summary class="btn btn-ghost lg:hidden">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+        <summary class="btn btn-ghost swap swap-rotate lg:hidden" @click="isOpen=!isOpen">
+          <input type="checkbox" v-model="isOpen"/>
+          <svg xmlns="http://www.w3.org/2000/svg" class="swap-off fill-current" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+          <svg class="swap-on fill-current" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"/></svg>
         </summary>
         <ul class="menu dropdown-content z-[1] p-2 shadow bg-base-200 rounded-sm mt-3 w-28" @click="closeDropdown">
           <li>

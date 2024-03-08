@@ -49,11 +49,13 @@ function selectChanged(e) {
 }
 
 async function chooseActivity(activity) {
-  selectedActivity.value = activity;
-  await request.put(`/view/${activity.id}`)
-    .catch(err => {
-      console.log('err', err);
-    });
+  if (selectedActivity.value.id !== activity.id) {
+    selectedActivity.value = activity;
+    await request.put(`/view/${activity.id}`)
+      .catch(err => {
+        console.log('err', err);
+      });
+  }
 }
 async function subscribe(id) {
   await request.put(`/auth/subscribe/${id}`)
