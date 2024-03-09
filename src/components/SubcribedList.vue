@@ -60,12 +60,12 @@ watch(isCalendarView, (val) => {
         </div>
       </div>
     </div>
+    <div v-if="SubcribedList.length === 0 && !loading" class="flex justify-center items-center h-64">
+      <p class="text-xl font-bold">暂无订阅活动</p>
+    </div>
   </div>
   <div v-else>
     <SubcribedCalendar :SubcribedList="SubcribedList" @update-subcribed="getSubscribed" />
-  </div>
-  <div v-if="SubcribedList.length === 0 && !loading" class="flex justify-center items-center h-64">
-    <p class="text-xl font-bold">暂无订阅活动</p>
   </div>
 </div>
 </template>
