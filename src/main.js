@@ -2,6 +2,8 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { registerSW } from 'virtual:pwa-register';
+registerSW({ immediate: true })
 
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
