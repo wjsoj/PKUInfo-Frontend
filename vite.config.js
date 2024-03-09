@@ -29,7 +29,13 @@ export default defineConfig({
         type: 'module',
         navigateFallback: 'index.html',
         suppressWarnings: true,
-      }
+      },
+      workbox: {
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
+        globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,svg}'],
+      },
     })
   ],
   resolve: {

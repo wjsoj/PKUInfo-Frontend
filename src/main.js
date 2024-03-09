@@ -27,4 +27,9 @@ const options = {
 };
 app.use(Toast, options);
 
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  window.deferredPrompt = e;
+})
+
 app.mount('#app')
