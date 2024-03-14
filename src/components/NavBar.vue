@@ -60,7 +60,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <nav class="navbar bg-base-300">
+  <nav class="navbar bg-base-200">
     <div class="flex flex-1">
       <details ref="navdropdown" class="dropdown">
         <summary class="btn btn-ghost swap swap-rotate lg:hidden" @click="isOpen=!isOpen">
@@ -95,16 +95,18 @@ onMounted(() => {
         <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/about')" to="/about" replace>关于</RouterLink>
       </div>
       <div class="dropdown">
-        <div tabindex="0" role="button" class="btn bg-base-300 border-none m-1">
+        <div tabindex="0" role="button" class="btn bg-base-200 border-none m-1">
           <SwatchBook />
           <p class=" hidden md:block">主题</p>
           <svg width="12px" height="12px" class="h-2 w-2 fill-current opacity-60 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048"><path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path></svg>
         </div>
         <ul tabindex="0" class="dropdown-content z-[1] p-2 shadow-2xl bg-base-200 rounded-box">
-          <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Light" value="light"/></li>
+          <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Light" value="winter"/></li>
           <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Dark" value="dark"/></li>
-          <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Luxury" value="luxury"/></li>
           <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Valentine" value="valentine"/></li>
+          <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Luxury" value="luxury"/></li>
+          <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Lemonade" value="lemonade"/></li>
+          <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Cyberpunk" value="cyberpunk"/></li>
         </ul>
       </div>
 
