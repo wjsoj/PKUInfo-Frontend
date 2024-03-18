@@ -21,6 +21,9 @@ function downImage() {
   a.download = 'groupqrcode.png';
   a.click();
 }
+const noremind = () => {
+  localStorage.setItem('noreminder', 'true');
+}
 
 onMounted(() => {
   // 当滑动距离大于100时显示返回顶部按钮
@@ -58,7 +61,7 @@ onMounted(() => {
         <img src="/groupqrcode.png" class="lg:w-4/5 self-center" alt="groupQRcode" @click="downImage" />
         <div class="modal-action">
           <form method="dialog">
-            <button class="btn btn-sm btn-primary" @click="localStorage.setItem('noreminder',true)">不再提醒并关闭</button>
+            <button class="btn btn-sm btn-primary" @click="noremind">不再提醒并关闭</button>
             <button class="btn btn-sm ml-4">关闭</button>
           </form>
         </div>
