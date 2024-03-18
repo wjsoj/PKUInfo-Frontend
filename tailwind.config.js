@@ -10,6 +10,7 @@ export default {
   },
   plugins: [require('@tailwindcss/typography'),require("daisyui")],
   daisyui: {
-    themes: ["winter","dark", "valentine", "luxury","cyberpunk","lemonade"],
+    themes: ["winter","synthwave", "valentine", "luxury","cyberpunk","lemonade"],
+    darkTheme: "synthwave",
   },
 }

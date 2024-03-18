@@ -82,8 +82,8 @@ onMounted(() => {
           </li>
         </ul>
       </details>
-      <div class="flex flex-1 flex-grow">
-        <a class="btn btn-ghost text-2xl font-semibold" id="mainTitle">PKU Info</a>
+      <div class="flex flex-1 lg:ml-6 flex-grow">
+        <a class="btn btn-ghost text-2xl lg:text-3xl font-semibold text-primary" id="mainTitle">PKU Info</a>
       </div>
     </div>
 
