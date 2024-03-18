@@ -47,11 +47,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <header>
+  <header class="z-10">
     <NavBar />
   </header>
-
-  <div class="grow flex flex-col ">
+  <div class="fixed z-0 top-0 right-0 w-[250px] lg:w-[1000px] lg:h-[600px] h-[660px] bg-gradient-to-bl from-primary/10 to-accent/10 blur-3xl rounded-bl-full"></div>
+  <div class="grow flex flex-col relative">
     <!-- reminder -->
     <dialog id="my_modal_2" class="modal">
       <div class="modal-box flex flex-col">
