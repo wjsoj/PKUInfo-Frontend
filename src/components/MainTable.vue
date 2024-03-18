@@ -6,20 +6,23 @@ import { storeToRefs } from 'pinia';
 import { useToast } from 'vue-toastification';
 import { tag_list,getFormatTime,getTagList } from './constant';
 import ActivityDetail from './ActivityDetail.vue';
+import Fuse from 'fuse.js';
 
 const toast = useToast();
 const infoStore = useInfoStore();
 const { loginStatus } = storeToRefs(infoStore);
 
 const sortBySub = ref(false);
-const size = ref(20);
+const size = ref(100);
 const Activities = ref([]);
 const page = ref(1);
 const selectedActivity = ref({});
 const today = new Date().toISOString().split('T')[0];
 const tag = ref(0);
 const loading = ref(false);
+const keywords = ref('');
 let totalPage = ref(0);
+let previous = [];
 
 const fetchActivities = async () => {
   loading.value = true;
@@ -37,6 +40,7 @@ const fetchActivities = async () => {
     Activities.value = res.records;
     totalPage.value = res.pages;
   }
+  previous = Activities.value;
   loading.value = false;
 }
 
@@ -70,25 +74,45 @@ async function subscribe(id) {
 onMounted(() => {
   fetchActivities();
 })
-watch(page, () => {
+watch([page,tag,sortBySub], () => {
   fetchActivities();
 })
-watch(sortBySub, () => {
-  fetchActivities();
-})
-watch(tag, () => {
-  fetchActivities();
+watch(keywords, (newVal) => {
+  if (newVal) {
+    const fuse = new Fuse(Activities.value, {
+      includeScore: true,
+      keys: [
+        {
+          name: 'title',
+          weight: 3
+        },
+        {
+          name: 'description',
+          weight: 2
+        },
+        {
+          name: 'tags',
+          weight: 0.5
+        },
+      ]
+    });
+    Activities.value = fuse.search(newVal).filter(item => item.score < 0.3).map(item => item.item);
+    console.log('Activities.value', Activities.value);
+  } else {
+    Activities.value = previous;
+  }
 })
 </script>
 
 <template>
 <!-- 头部选择框 -->
-<div class="mx-auto mt-2">
+<div class="mx-auto mt-2 flex flex-col items-center">
   <p class="text-xs text-base-content/80 ">显示未来七天内的活动</p>
+  <p class="text-xs text-base-content " v-if="keywords">共搜索到<span class="text-primary font-bold">{{ Activities.length }}</span>条结果</p>
 </div>
 <div class="flex flex-col space-y-2 lg:flex-row justify-between mx-4 lg:mx-10 mt-2">
   <label class="input input-bordered w-full lg:w-72 flex items-center gap-2">
-    <input type="text" class="grow" placeholder="Search" />
+    <input type="text" class="grow" placeholder="Search" v-model="keywords" />
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd" /></svg>
   </label>
   <div class="flex flex-row w-full flex-wrap space-x-4 lg:justify-end">

@@ -47,6 +47,6 @@ export const checkDate = (date) => {
   }
 }
 
-export const themes = [{label:'Light',value:'winter'},{label:'Dark',value:'dark'},{label:'Lemonade',value:'lemonade'},{label:'Luxury',value:'luxury'}];
+export const themes = [{label:'Light',value:'fantasy'},{label:'Dark',value:'dark'},{label:'Lemonade',value:'lemonade'},{label:'Luxury',value:'luxury'}];
 
 export default { map,tag_list,getFormatTime,getTagList,checkDate,themes }
