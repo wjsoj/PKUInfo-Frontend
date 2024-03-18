@@ -6,6 +6,7 @@ import { storeToRefs } from 'pinia';
 import { onMounted,ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
+import { themes } from './constant';
 
 const router = useRouter();
 const toast = useToast();
@@ -45,6 +46,11 @@ function closeavatar() {
   avatardropdown.value.removeAttribute('open');
 }
 
+function changeTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+}
+
 onMounted(() => {
   // console.log('loginStatus', loginStatus.value);
   // 当dropdown打开时，点击其他地方关闭dropdown
@@ -56,6 +62,12 @@ onMounted(() => {
       closeavatar();
     }
   });
+  // 设置主题
+  if (localStorage.getItem('theme')) {
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme'));
+  } else {
+    matchMedia('(prefers-color-scheme: dark)').matches ? document.documentElement.setAttribute('data-theme', 'dark') : document.documentElement.setAttribute('data-theme', 'winter');
+  }
 });
 </script>
 
@@ -83,7 +95,7 @@ onMounted(() => {
         </ul>
       </details>
       <div class="flex flex-1 lg:ml-6 flex-grow">
-        <a class="btn btn-ghost text-2xl lg:text-3xl font-semibold text-primary" id="mainTitle">PKU Info</a>
+        <a class="btn btn-ghost text-2xl lg:text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-br from-primary to-accent" id="mainTitle">PKU Info</a>
       </div>
     </div>
 
@@ -95,18 +107,13 @@ onMounted(() => {
         <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/about')" to="/about" replace>关于</RouterLink>
       </div>
       <div class="dropdown">
-        <div tabindex="0" role="button" class="btn bg-base-200 border-none m-1">
+        <div tabindex="0" role="button" class="btn bg-base-200 border-none m-0">
           <SwatchBook />
           <p class=" hidden md:block">主题</p>
           <svg width="12px" height="12px" class="h-2 w-2 fill-current opacity-60 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048"><path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path></svg>
         </div>
         <ul tabindex="0" class="dropdown-content z-[1] p-2 shadow-2xl bg-base-200 rounded-box">
-          <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Light" value="winter"/></li>
-          <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Dark" value="dark"/></li>
-          <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Valentine" value="valentine"/></li>
-          <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Luxury" value="luxury"/></li>
-          <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Lemonade" value="lemonade"/></li>
-          <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Cyberpunk" value="cyberpunk"/></li>
+          <li v-for="(theme,index) in themes" :key="index"><input type="radio" name="theme-dropdown" class="btn btn-sm btn-block btn-ghost justify-start" :aria-label="theme.label" :value="theme.value" @click="changeTheme(theme.value)"/></li>
         </ul>
       </div>
 
