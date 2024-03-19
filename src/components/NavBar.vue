@@ -76,7 +76,7 @@ onMounted(() => {
       toast.error('您的浏览器不支持oklch色彩空间，主题切换功能将受限', {
         timeout: 3000
       });
-    }, 3000);
+    }, 1000);
   }
 });
 </script>
