@@ -2,10 +2,8 @@
 import { RouterView } from 'vue-router'
 import NavBar from './components/NavBar.vue';
 import { ArrowBigUpDash } from 'lucide-vue-next';
-import { onMounted,ref } from 'vue';
+import { onMounted } from 'vue';
 import { clickEffect } from './utils/firework';
-import { useToast } from 'vue-toastification';
-const toast = useToast();
 
 const scrollToTop = () => {
   window.scrollTo({
@@ -13,8 +11,6 @@ const scrollToTop = () => {
     behavior: 'smooth'
   });
 }
-
-const themeSupport = ref(true);
 
 // open Image /groupqrcode.png in new tab
 function downImage() {
@@ -27,6 +23,8 @@ const noremind = () => {
   localStorage.setItem('noreminder', 'true');
 }
 
+const themeSupport = window.CSS.supports('color', 'oklch(0 0 0)');
+
 onMounted(() => {
   // 当滑动距离大于100时显示返回顶部按钮
   window.onscroll = function () {
@@ -38,11 +36,6 @@ onMounted(() => {
     }
   }
   clickEffect();
-  // 如果浏览器不支持oklch明度色彩
-  if (!window.CSS.supports('color', 'oklch(0 0 0)')) {
-    toast.error('您的浏览器不支持oklch色彩模式，主题切换功能将受限');
-    themeSupport.value = false;
-  }
   if (!localStorage.getItem('noreminder')) {
     document.getElementById('my_modal_2').showModal();
   }

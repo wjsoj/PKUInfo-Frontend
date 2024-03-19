@@ -16,6 +16,7 @@ const { loginStatus } = storeToRefs(infoStore);
 const navdropdown = ref(null);
 const avatardropdown = ref(null);
 const isOpen = ref(false);
+const themeSupport = ref(true);
 
 function signout() {
   loginStatus.value = false;
@@ -68,6 +69,15 @@ onMounted(() => {
   } else {
     matchMedia('(prefers-color-scheme: dark)').matches ? document.documentElement.setAttribute('data-theme', 'dark') : document.documentElement.setAttribute('data-theme', 'winter');
   }
+  // 浏览器兼容性检查
+  if (!window.CSS.supports('color', 'oklch(0 0 0)')) {
+    themeSupport.value = false;
+    setTimeout(() => {
+      toast.error('您的浏览器不支持oklch色彩空间，主题切换功能将受限', {
+        timeout: 3000
+      });
+    }, 3000);
+  }
 });
 </script>
 
@@ -106,7 +116,7 @@ onMounted(() => {
         <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/profile')" to="/profile">订阅活动</RouterLink>
         <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/about')" to="/about" replace>关于</RouterLink>
       </div>
-      <div class="dropdown">
+      <div class="dropdown" v-if="themeSupport">
         <div tabindex="0" role="button" class="btn bg-base-200 border-none m-0">
           <SwatchBook />
           <p class=" hidden md:block">主题</p>
