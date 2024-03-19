@@ -2,7 +2,7 @@
 import { RouterView } from 'vue-router'
 import NavBar from './components/NavBar.vue';
 import { ArrowBigUpDash } from 'lucide-vue-next';
-import { onMounted } from 'vue';
+import { onMounted,ref } from 'vue';
 import { clickEffect } from './utils/firework';
 import { useToast } from 'vue-toastification';
 const toast = useToast();
@@ -13,6 +13,8 @@ const scrollToTop = () => {
     behavior: 'smooth'
   });
 }
+
+const themeSupport = ref(true);
 
 // open Image /groupqrcode.png in new tab
 function downImage() {
@@ -36,9 +38,10 @@ onMounted(() => {
     }
   }
   clickEffect();
-  // 如果识别到data-theme属性，发出提示
-  if (document.documentElement.getAttribute('data-theme')) {
-    toast.info('当前浏览器手动主题切换可能失效，将自动跟随系统主题');
+  // 如果浏览器不支持oklch明度色彩
+  if (!window.CSS.supports('color', 'oklch(0 0 0)')) {
+    toast.error('您的浏览器不支持oklch色彩模式，主题切换功能将受限');
+    themeSupport.value = false;
   }
   if (!localStorage.getItem('noreminder')) {
     document.getElementById('my_modal_2').showModal();
@@ -50,7 +53,7 @@ onMounted(() => {
   <header class="z-10">
     <NavBar />
   </header>
-  <div class="fixed z-0 top-0 right-0 w-[250px] lg:w-[1000px] lg:h-[600px] h-[660px] bg-gradient-to-bl from-primary/10 to-accent/10 blur-3xl rounded-bl-full"></div>
+  <div v-if="themeSupport" class="fixed z-0 top-0 right-0 w-[250px] lg:w-[1000px] lg:h-[600px] h-[660px] bg-gradient-to-bl from-primary/10 to-accent/10 blur-3xl rounded-bl-full"></div>
   <div class="grow flex flex-col relative">
     <!-- reminder -->
     <dialog id="my_modal_2" class="modal">

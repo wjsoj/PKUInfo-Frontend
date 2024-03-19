@@ -166,7 +166,7 @@ const changeDate = (date) => {
 </div>
 
   <!-- 主日历 -->
-<div class="w-full bg-base-100 p-4 lg:pt-0 ">
+<div class="w-full p-4 lg:pt-0 ">
   <div class="flex  justify-between gap-0 sm:gap-4">
     <p class="font-semibold text-2xl w-32 lg:w-56">
       {{moment(firstDayOfMonth).format("MM").toString()}}
