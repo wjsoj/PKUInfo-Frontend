@@ -49,6 +49,7 @@ function closeavatar() {
 
 function changeTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
+  document.querySelector('nav').setAttribute('data-theme', theme);
   localStorage.setItem('theme', theme);
 }
 
@@ -66,8 +67,15 @@ onMounted(() => {
   // 设置主题
   if (localStorage.getItem('theme')) {
     document.documentElement.setAttribute('data-theme', localStorage.getItem('theme'));
+    document.querySelector('nav').setAttribute('data-theme', localStorage.getItem('theme'));
   } else {
-    matchMedia('(prefers-color-scheme: dark)').matches ? document.documentElement.setAttribute('data-theme', 'dark') : document.documentElement.setAttribute('data-theme', 'winter');
+    if (matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.querySelector('nav').setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'fantasy');
+      document.querySelector('nav').setAttribute('data-theme', 'fantasy');
+    }
   }
   // 浏览器兼容性检查
   if (!window.CSS.supports('color', 'oklch(0 0 0)')) {
@@ -82,7 +90,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <nav class="navbar bg-base-200">
+  <nav class="navbar bg-base-200 data-[theme=fantasy]:bg-sky-50">
     <div class="flex flex-1">
       <details ref="navdropdown" class="dropdown">
         <summary class="btn btn-ghost swap swap-rotate lg:hidden" @click="isOpen=!isOpen">
@@ -94,7 +102,7 @@ onMounted(() => {
           <li>
             <RouterLink to="/">活动列表</RouterLink></li>
           <li>
-            <RouterLink to="/calendar" >活动日历</RouterLink>
+            <RouterLink to="/calendar">活动日历</RouterLink>
           </li>
           <li>
             <RouterLink to="/profile" replace>订阅活动</RouterLink>
@@ -117,7 +125,7 @@ onMounted(() => {
         <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/about')" to="/about" replace>关于</RouterLink>
       </div>
       <div class="dropdown" v-if="themeSupport">
-        <div tabindex="0" role="button" class="btn bg-base-200 border-none m-0">
+        <div tabindex="0" role="button" class="btn bg-transparent border-none m-0">
           <SwatchBook />
           <p class=" hidden md:block">主题</p>
           <svg width="12px" height="12px" class="h-2 w-2 fill-current opacity-60 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048"><path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path></svg>
@@ -134,7 +142,8 @@ onMounted(() => {
           </div>
         </summary>
         <ul class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-200 rounded-sm w-32" @click="closeavatar">
-          <li><RouterLink to="/profile">订阅活动</RouterLink></li>
+          <li><RouterLink to="/profile" replace>订阅活动</RouterLink></li>
+          <li><RouterLink to="/submit" replace>提交信息</RouterLink></li>
           <li v-if="loginStatus"><a @click="signout">注销</a></li>
           <li v-else><RouterLink to="/login">登录</RouterLink></li>
         </ul>

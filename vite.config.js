@@ -53,6 +53,11 @@ export default defineConfig({
           '^/api':'/'
         }
       },
+      '/account': {
+        target: 'https://m.gsdata.cn',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/account/, '/api/account/search/list'),
+      }
     }
   }
 })

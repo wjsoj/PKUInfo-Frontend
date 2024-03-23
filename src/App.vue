@@ -37,7 +37,7 @@ onMounted(() => {
   }
   clickEffect();
   if (!localStorage.getItem('noreminder')) {
-    document.getElementById('my_modal_2').showModal();
+    document.getElementById('popdialog').showModal();
   }
 });
 </script>
@@ -49,7 +49,7 @@ onMounted(() => {
   <div v-if="themeSupport" class="fixed z-0 top-0 right-0 w-[250px] lg:w-[1000px] lg:h-[600px] h-[660px] bg-gradient-to-bl from-primary/10 to-accent/10 blur-3xl rounded-bl-full"></div>
   <div class="grow flex flex-col relative">
     <!-- reminder -->
-    <dialog id="my_modal_2" class="modal">
+    <dialog id="popdialog" class="modal">
       <div class="modal-box flex flex-col">
         <h3 class="font-bold text-2xl">PKU Info用户群</h3>
         <p class="text-lg">我们正在持续迭代版本，期待听到您的意见！</p>

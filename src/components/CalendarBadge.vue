@@ -4,6 +4,7 @@ import { ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 import { useInfoStore } from '@/stores/infoStore';
 import { storeToRefs } from 'pinia';
+import moment from 'moment';
 
 const toast = useToast();
 const infoStore = useInfoStore();
@@ -39,14 +40,18 @@ const fetchActivities = async () => {
     toast.error('获取活动列表失败');
     console.log('err', err);
   });
+
   let endTime = new Date().getTime();
+  let startWeek = moment().startOf('week').format('YYYY-MM-DD');
   ansTime.value.push(endTime - nowTime);
   activityList.value.push({
     date: props.date,
-    records: res.records,
+    records: props.date < startWeek ? res.records.slice(0, 1) : res.records,
     tot: res.total
   });
-  records.value = res.records;
+
+  // if props.data earlier than current week, only show the first one
+  records.value = props.date < startWeek ? res.records.slice(0, 1) : res.records;
   tot.value = res.total;
   loading.value = false;
 }
@@ -63,7 +68,7 @@ watch(() => props.date, () => {
   <div class="flex-col items-center w-full h-full pb-12 mb-[-36px] mt-2 lg:flex hidden">
     <span v-if="loading" class="loading loading-dots loading-md"></span>
     <div v-for="activity in records " :key="activity.id" class="w-full grow space-y-0">
-      <h3 class="text-xs border-l-4 mx-1 px-1 border-primary/60 ">{{ activity.title }}</h3>
+      <h3 class="text-[13px] border-l-4 mx-1 px-1 border-primary/60 ">{{ activity.title }}</h3>
     </div>
     <div v-if="records.length == 0 && !loading" class="w-full px-1 py-1">
       <h3>暂无活动</h3>
@@ -78,3 +83,20 @@ watch(() => props.date, () => {
     <span v-if="tot==0 && !loading" class="text-xs text-base-content/60">暂无</span>
   </div>
 </template>
+
+<style scoped>
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+h3 {
+  animation: fadeIn 0.7s ease-in-out;
+}
+</style>

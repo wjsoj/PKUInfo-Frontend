@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+axios.defaults.withCredentials = true
 // 封装 baseURL
 const request = axios.create({
     // baseURL: "https://pkuinfo.lcpu.dev/api"

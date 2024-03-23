@@ -151,7 +151,7 @@ watch(keywords, (newVal) => {
 </dialog>
 
 <!-- 大屏，表格 -->
-<div class="hidden lg:flex flex-col items-center mx-10 mb-10 overflow-x-auto">
+<div class="hidden lg:flex flex-col items-center mx-10 mb-10 overflow-x-clip">
   <table class="table table-zebra xl:table-lg">
     <thead>
       <tr>
@@ -168,13 +168,13 @@ watch(keywords, (newVal) => {
         </td>
       </tr>
       <tr v-for="activity in Activities" :key="activity.id">
-        <td class=" cursor-pointer font-semibold" onclick="detail.showModal()" @click="chooseActivity(activity)">{{ activity.title }}</td>
-        <td class="text-sm space-y-1">
-          <div v-if="activity.tags">
-            <span v-for="tag in getTagList(activity.tags)" :key="tag" class="badge badge-sm badge-outline badge-primary">{{ tag }}</span>
+        <td class=" cursor-pointer text-lg font-semibold min-w-72" onclick="detail.showModal()" @click="chooseActivity(activity)">{{ activity.title }}</td>
+        <td class="text-sm">
+          <div v-if="activity.tags" class="space-y-1">
+            <span v-for="tag in getTagList(activity.tags)" :key="tag" class="badge badge-outline badge-primary">{{ tag }}</span>
           </div>
         </td>
-        <td class="text-sm text-base-content/80">{{ getFormatTime(activity) }}</td>
+        <td class="text-sm text-base-content/85 font-semibold">{{ getFormatTime(activity) }}</td>
         <td class="text-sm">{{ activity.description }}</td>
       </tr>
     </tbody>
@@ -213,3 +213,23 @@ watch(keywords, (newVal) => {
   </div>
 </div>
 </template>
+
+<!-- create slidein animation for every tr element -->
+
+<style scoped>
+@keyframes slidein {
+  from {
+    transform: translateY(50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* execute animation for every tr element in order, delay 0.1s for each */
+tbody tr {
+  animation: slidein 0.5s ease-out;
+}
+</style>
