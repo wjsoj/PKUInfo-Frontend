@@ -187,7 +187,7 @@ watch(keywords, (newVal) => {
 <!-- 小屏，列表 -->
 <div class="flex lg:hidden flex-col items-center my-10 space-y-2">
   <span v-if="loading" class="loading loading-infinity loading-lg"></span>
-  <div v-for="activity in Activities" :key="activity.id" class="flex flex-col items-center w-full ">
+  <div v-for="activity in Activities" :key="activity.id" class="flex flex-col items-center w-full list_item">
     <div class="flex flex-row justify-between items-center w-full pl-4 pr-2">
       <div class="flex flex-col space-y-2">
         <div class="self-start hyphens-auto text-lg font-bold">{{ activity.title }}</div>
@@ -230,6 +230,10 @@ watch(keywords, (newVal) => {
 
 /* execute animation for every tr element in order, delay 0.1s for each */
 tbody tr {
+  animation: slidein 0.5s ease-out;
+}
+
+.list_item {
   animation: slidein 0.5s ease-out;
 }
 </style>

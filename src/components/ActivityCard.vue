@@ -63,3 +63,20 @@ async function viewMore() {
   </div>
 </div>
 </template>
+
+<style scoped>
+@keyframes slidein {
+  from {
+    transform: translateY(50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.card {
+  animation: slidein 0.5s ease-out;
+}
+</style>
