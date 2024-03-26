@@ -12,7 +12,7 @@ const toast = useToast();
 const infoStore = useInfoStore();
 const { loginStatus } = storeToRefs(infoStore);
 
-const sortBySub = ref(false);
+const sortBy = ref(0);
 const size = ref(100);
 const Activities = ref([]);
 const page = ref(1);
@@ -27,7 +27,7 @@ let previous = [];
 const fetchActivities = async () => {
   loading.value = true;
   Activities.value = [];
-  if (sortBySub.value) {
+  if (sortBy.value == 0) {
     const res = await request.get(`/activity/week/subscribe/${today}/${page.value}/${size.value}/${tag.value}`).then(res => res.data.data).catch(err => {
       console.log('err', err);
     });
@@ -40,16 +40,13 @@ const fetchActivities = async () => {
     Activities.value = res.records;
     totalPage.value = res.pages;
   }
+  if (sortBy.value == 2) {
+    Activities.value.sort((a, b) => {
+      return new Date(a.startDate + ' ' + a.startTime) - new Date(b.startDate + ' ' + b.startTime);
+    });
+  }
   previous = Activities.value;
   loading.value = false;
-}
-
-function selectChanged(e) {
-  if (e.target.value === '按订阅量') {
-    sortBySub.value = true;
-  } else {
-    sortBySub.value = false;
-  }
 }
 
 async function chooseActivity(activity) {
@@ -74,7 +71,7 @@ async function subscribe(id) {
 onMounted(() => {
   fetchActivities();
 })
-watch([page,tag,sortBySub], () => {
+watch([page,tag,sortBy], () => {
   fetchActivities();
 })
 watch(keywords, (newVal) => {
@@ -115,11 +112,12 @@ watch(keywords, (newVal) => {
     <input type="text" class="grow" placeholder="Search" v-model="keywords" />
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd" /></svg>
   </label>
-  <div class="flex flex-row w-full flex-wrap space-x-4 lg:justify-end">
-    <select class="select select-sm lg:select-md select-bordered" @change="selectChanged">
-      <option disabled selected>排序方式（默认按浏览量）</option>
-      <option>按浏览量</option>
-      <option>按订阅量</option>
+  <div class="flex flex-row w-full items-center flex-wrap space-x-4 lg:justify-end">
+    <span class="ml-4 text-sm lg:text-base">排序方式：</span>
+    <select class="select select-sm lg:select-md select-bordered" v-model="sortBy">
+      <option value="2">按时间</option>
+      <option value="0">按浏览量</option>
+      <option value="1">按订阅量</option>
     </select>
     <select class="select select-sm lg:select-md select-bordered" v-model="tag">
       <option disabled selected value="0">标签</option>
@@ -200,8 +198,9 @@ watch(keywords, (newVal) => {
       </div>
     </div>
     <div tabindex="0" class="collapse"> 
-      <div class="collapse-title text-sm text-info font-medium px-4 mt-[-8px]" @click="chooseActivity(activity)">
+      <div class="collapse-title text-sm text-info font-medium flex flex-row justify-between px-4 mt-[-8px]" @click="chooseActivity(activity)">
         查看详情
+        <span class="text-xs text-primary pr-4 mt-1">{{ activity.startDate }}</span>
       </div>
       <div class="collapse-content mt-[-8px] mb-3"> 
         <ActivityDetail :activity="activity" />
