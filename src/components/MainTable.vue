@@ -12,7 +12,7 @@ const toast = useToast();
 const infoStore = useInfoStore();
 const { loginStatus } = storeToRefs(infoStore);
 
-const sortBy = ref(0);
+const sortBy = ref(1);
 const size = ref(100);
 const Activities = ref([]);
 const page = ref(1);
@@ -116,8 +116,8 @@ watch(keywords, (newVal) => {
     <span class="ml-4 text-sm lg:text-base">排序方式：</span>
     <select class="select select-sm lg:select-md select-bordered" v-model="sortBy">
       <option value="2">按时间</option>
-      <option value="0">按浏览量</option>
-      <option value="1">按订阅量</option>
+      <option value="1">按浏览量</option>
+      <option value="0">按订阅量</option>
     </select>
     <select class="select select-sm lg:select-md select-bordered" v-model="tag">
       <option disabled selected value="0">标签</option>
