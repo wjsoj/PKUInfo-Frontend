@@ -107,7 +107,7 @@ watch(keywords, (newVal) => {
   <p class="text-xs text-base-content/80 ">显示未来七天内的活动</p>
   <p class="text-xs text-base-content " v-if="keywords">共搜索到<span class="text-primary font-bold">{{ Activities.length }}</span>条结果</p>
 </div>
-<div class="flex flex-col space-y-2 lg:flex-row justify-between mx-4 lg:mx-10 mt-2">
+<div class="flex flex-col space-y-2 lg:flex-row justify-between mx-4 lg:mx-24 2xl:mx-32 my-2">
   <label class="input input-bordered w-full lg:w-72 flex items-center gap-2">
     <input type="text" class="grow" placeholder="Search" v-model="keywords" />
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd" /></svg>
@@ -139,7 +139,7 @@ watch(keywords, (newVal) => {
     <div class="modal-action">
       <button v-if="loginStatus" class="btn btn-primary" @click="subscribe(selectedActivity.id)">订阅</button>
       <form method="dialog">
-        <button class="btn">Close</button>
+        <button class="btn">关闭</button>
       </form>
     </div>
   </div>
@@ -149,8 +149,8 @@ watch(keywords, (newVal) => {
 </dialog>
 
 <!-- 大屏，表格 -->
-<div class="hidden lg:flex flex-col items-center mx-10 mb-10 overflow-x-clip">
-  <table class="table table-zebra xl:table-lg">
+<div class="hidden lg:flex flex-col items-center mx-20 2xl:mx-32 mb-10 overflow-x-clip">
+  <table class="table table-zebra table-pin-rows xl:table-lg">
     <thead>
       <tr>
         <th>活动名称</th>
@@ -166,14 +166,14 @@ watch(keywords, (newVal) => {
         </td>
       </tr>
       <tr v-for="activity in Activities" :key="activity.id">
-        <td class=" cursor-pointer text-lg font-semibold min-w-72" onclick="detail.showModal()" @click="chooseActivity(activity)">{{ activity.title }}</td>
-        <td class="text-sm">
+        <td class=" cursor-pointer text-lg font-semibold" onclick="detail.showModal()" @click="chooseActivity(activity)">{{ activity.title }}</td>
+        <td class="text-sm max-w-24">
           <div v-if="activity.tags" class="space-y-1">
             <span v-for="tag in getTagList(activity.tags)" :key="tag" class="badge badge-outline badge-primary">{{ tag }}</span>
           </div>
         </td>
-        <td class="text-sm text-base-content/85 font-semibold">{{ getFormatTime(activity) }}</td>
-        <td class="text-sm">{{ activity.description }}</td>
+        <td class="text-sm text-base-content/85 font-semibold max-w-40">{{ getFormatTime(activity) }}</td>
+        <td class="text-sm max-w-screen-md"><span class="line-clamp-5">{{ activity.description }}</span></td>
       </tr>
     </tbody>
   </table>
