@@ -44,6 +44,7 @@ watch(isCalendarView, (val) => {
   <p class="cursor-pointer text-sm lg:text-base" :class="{'font-semibold' : isCalendarView==true}" @click="isCalendarView = true">日历视图</p>
 </div>
 <div class="flex flex-col items-center">
+  <!-- 列表 -->
   <div v-if="!isCalendarView" class="max-w-screen-sm px-4 my-10">
     <div v-for="activity in SubcribedList" :key="activity.id" class="flex flex-col items-center">
       <p class=" self-start text-xs lg:text-sm">{{ activity.startDate }}</p>

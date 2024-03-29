@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useInfoStore } from '../stores/infoStore';
 import { storeToRefs } from 'pinia';
 import { Eye, EyeOff } from 'lucide-vue-next';
+import { encrypt } from '@/utils/aes';
 
 const infoStore = useInfoStore();
 const { loginStatus } = storeToRefs(infoStore);
@@ -26,7 +27,7 @@ async function signin() {
   }
   await request.post('/admin/login', {
     username: user.username,
-    password: user.password
+    password: encrypt(user.password)
   }).then((res) => {
     // console.log(res.data)
     if (res.data.code === 200) {
