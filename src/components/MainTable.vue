@@ -167,7 +167,7 @@ watch(keywords, (newVal) => {
       </tr>
       <tr v-for="activity in Activities" :key="activity.id">
         <td class=" cursor-pointer text-lg font-semibold" onclick="detail.showModal()" @click="chooseActivity(activity)">{{ activity.title }}</td>
-        <td class="text-sm max-w-24">
+        <td class="text-sm max-w-40">
           <div v-if="activity.tags" class="space-y-1">
             <span v-for="tag in getTagList(activity.tags)" :key="tag" class="badge badge-outline badge-primary">{{ tag }}</span>
           </div>
