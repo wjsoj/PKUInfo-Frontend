@@ -8,6 +8,7 @@ const Activities = ref([]);
 const loading = ref(false);
 const selectedActivity = ref({});
 const keywords = ref('');
+const newActivity = ref({});
 
 async function fetchUser() {
   Activities.value = [];
@@ -56,6 +57,52 @@ watch(keywords, (newVal) => {
     </div>
   </div>
 </dialog>
+<dialog id="modifyconfirm" class="modal">
+  <div class="modal-box max-w-[72vw]">
+    <h3 class="font-bold text-xl">修改活动</h3>
+    <div class="grid grid-cols-2 gap-6">
+      <div class="flex flex-col">
+        <label class="label">标题</label>
+        <input type="text" class="input input-bordered w-full" v-model="newActivity.title" />
+        <label class="label">地点</label>
+        <input type="text" class="input input-bordered w-full" v-model="newActivity.address" />
+        <label class="label">举办单位</label>
+        <input type="text" class="input input-bordered w-full" v-model="newActivity.college" />
+      </div>
+      <div>
+        <label class="label">描述</label>
+        <textarea type="text" class="textarea textarea-bordered w-full min-h-56" v-model="newActivity.description" />
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="label">开始日期</label>
+          <input type="date" class="input input-bordered w-full" v-model="newActivity.startDate" />
+        </div>
+        <div>
+          <label class="label">开始时间</label>
+          <input type="time" class="input input-bordered w-full" v-model="newActivity.startTime" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="label">结束日期</label>
+          <input type="date" class="input input-bordered w-full" v-model="newActivity.endDate" />
+        </div>
+        <div>
+          <label class="label">结束时间</label>
+          <input type="time" class="input input-bordered w-full" v-model="newActivity.endTime" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn btn-error mr-2" @click="changeActivity()">确定</button>
+        <button class="btn">取消</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
 <div class="my-10">
   <!-- 搜索框 -->
   <label class="input input-bordered flex items-center gap-2 mb-10">
@@ -65,7 +112,8 @@ watch(keywords, (newVal) => {
   <div v-for="activity in Activities" :key="activity.id" class="flex flex-col items-center">
     <div class="flex flex-row justify-between w-full">
       <div class="grow self-start text-lg font-bold">{{ activity.title }}</div>
-      <button class="btn btn-xs lg:btn-sm btn-primary self-end ml-2" @click="selectedActivity = activity" onclick="deleteconfirm.showModal()">删除活动</button>
+      <button class="btn btn-xs lg:btn-sm btn-outline btn-primary self-end ml-2" @click="selectedActivity = activity" onclick="deleteconfirm.showModal()">删除</button>
+      <button class="btn btn-xs lg:btn-sm btn-secondary self-end ml-2" @click="selectedActivity = activity;newActivity = activity" onclick="modifyconfirm.showModal()">修改</button>
     </div>
     <div tabindex="0" class="collapse"> 
       <div class="collapse-title text-sm font-medium text-info mt-[-8px]">

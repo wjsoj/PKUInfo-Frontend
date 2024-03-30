@@ -8,7 +8,10 @@ const toast = useToast();
 
 const SubcribedList = ref([]);
 const loading = ref(false);
-const isCalendarView = ref(localStorage.getItem('isCalendarView') === 'true');
+const isCalendarView = ref(true);
+if (localStorage.getItem('isCalendarView') === 'false') {
+  isCalendarView.value = false;
+}
 
 const getSubscribed = async () => {
   loading.value = true;
@@ -43,6 +46,7 @@ watch(isCalendarView, (val) => {
   <input type="checkbox" class="toggle toggle-md" v-model="isCalendarView" />
   <p class="cursor-pointer text-sm lg:text-base" :class="{'font-semibold' : isCalendarView==true}" @click="isCalendarView = true">日历视图</p>
 </div>
+
 <div class="flex flex-col items-center">
   <!-- 列表 -->
   <div v-if="!isCalendarView" class="max-w-screen-sm px-4 my-10">

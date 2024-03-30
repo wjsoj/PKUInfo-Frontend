@@ -5,10 +5,11 @@ import moment from 'moment';
 import { request } from '@/utils/request';
 import { useToast } from 'vue-toastification';
 import ActivityCard from './ActivityCard.vue';
+import { generateCalendar } from '@/utils/calendar';
 
-const { SubcribedList } = defineProps(['SubcribedList']);
+const props = defineProps(['SubcribedList']);
 const emit = defineEmits(['updateSubcribed']);
-
+const selectedActivities = ref([]);
 const toast = useToast();
 
 const today = moment().startOf('day');
@@ -73,16 +74,57 @@ const getNextMonth = () => {
   firstDayOfMonth.value = firstDayOfNextMonth;
   currentMonth.value = moment(firstDayOfNextMonth).format("MMM-yyyy");
 };
+
+function checkSelect(activity) {
+  if (selectedActivities.value.includes(activity)) {
+    selectedActivities.value = selectedActivities.value.filter(item => item !== activity);
+  } else {
+    selectedActivities.value.push(activity);
+  }
+}
+
+function downloadCalendar() {
+  const finalActivities = props.SubcribedList.filter(item => !selectedActivities.value.includes(item));
+  const calendar = generateCalendar(finalActivities);
+  // console.log(calendar);
+  const blob = new Blob([calendar], { type: 'text/calendar' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'PKUInfo.ics';
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
 </script>
 
 <template>
-<div class="w-full lg:w-screen lg:px-10 lg:space-x-4 bg-base-100 p-4 flex flex-col lg:grid lg:grid-cols-2 items-center lg:justify-items-center">
+<dialog id="calendarConfirm" class="modal">
+  <div class="modal-box">
+    <h3 class="font-bold text-xl">选择活动</h3>
+    <p class="py-4">请选择要导出的活动：</p>
+    <div v-for="activity in props.SubcribedList" :key="activity.id" class="flex flex-row items-center space-y-2">
+      <input type="checkbox" class="mt-2 checkbox checkbox-primary" checked="checked" @click="checkSelect(activity)">
+      <p class="pl-2" :class="{'font-semibold': !selectedActivities.includes(activity)}">{{ activity.title }}</p>
+    </div>
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn btn-error mr-2" @click="downloadCalendar">导出</button>
+        <button class="btn">取消</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+<div class="w-full lg:w-screen lg:px-10 lg:space-x-4 p-4 flex flex-col lg:grid lg:grid-cols-2 items-center lg:justify-items-center">
   <div class="lg:self-start">
     <div class="flex justify-between gap-0 sm:gap-4">
       <p class="font-semibold text-2xl w-32">
         {{moment(firstDayOfMonth).format("MM").toString()}}
         <span class="font-normal text-base pl-2">{{ moment(firstDayOfMonth).format("YYYY").toString() }}</span>
       </p>
+
+      <button class="hidden lg:block btn btn-sm btn-primary btn-outline" onclick="calendarConfirm.showModal()">导出日历文件（.ics）</button>
+      <button class="lg:hidden btn btn-xs mt-1 btn-primary btn-outline" onclick="calendarConfirm.showModal()">导出日历文件</button>
 
       <div class="flex flex-row items-center">
         <button class="btn btn-square btn-sm btn-ghost"  @click="getPrevMonth">
@@ -109,25 +151,42 @@ const getNextMonth = () => {
         @click="selectedDate = day">
           {{ moment(day).format('D') }}
         </p>
-          <div class="h-[25px] w-full text-center font-bold text-primary bg-base-200" v-if="SubcribedList.filter(item => moment(item.startDate).isSame(day, 'day')).length> 0">
-            {{ SubcribedList.filter(item => moment(item.startDate).isSame(day, 'day')).length }}
+          <div class="h-[25px] w-full text-center font-bold text-primary bg-base-200" v-if="props.SubcribedList.filter(item => moment(item.startDate).isSame(day, 'day')).length> 0">
+            {{ props.SubcribedList.filter(item => moment(item.startDate).isSame(day, 'day')).length }}
           </div>
       </div>
     </div>
   </div>
 
-  <!-- 小屏日历卡片 -->
+  <!-- 日历卡片 -->
   <div>
     <div class="flex max-w-screen-sm flex-col items-center py-10 space-y-2">
-      <div v-for="record in SubcribedList.filter(item => moment(item.startDate).isSame(selectedDate, 'day'))" :key="record.id" class="relative">
+      <div v-for="record in props.SubcribedList.filter(item => moment(item.startDate).isSame(selectedDate, 'day'))" :key="record.id" class="relative">
         <ActivityCard :activity="record"/>
-        <button class="btn btn-xs btn-primary btn-outline absolute rounded-box cursor-pointer top-0.5 right-0.5 z-10" @click="unsubscribe(record.id)">取消订阅</button>
+        <button class="btn btn-xs btn-primary btn-outline absolute rounded-box cursor-pointer top-0.5 right-0.5 z-10 slide" @click="unsubscribe(record.id)">取消订阅</button>
       </div>
     </div>
-    <div v-if="SubcribedList.filter(item => moment(item.startDate).isSame(selectedDate, 'day')).length == 0">
+    <div v-if="props.SubcribedList.filter(item => moment(item.startDate).isSame(selectedDate, 'day')).length == 0">
       <h3 class="text-center text-2xl font-semibold mt-2">暂无订阅活动</h3>
     </div>
   </div>
 
 </div>
 </template>
+
+<style scoped>
+@keyframes slidein {
+  from {
+    transform: translateY(200px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide {
+  animation: slidein 0.5s ease-out;
+}
+</style>

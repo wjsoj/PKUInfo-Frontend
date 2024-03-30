@@ -13,7 +13,7 @@ const infoStore = useInfoStore();
 const { loginStatus } = storeToRefs(infoStore);
 
 const sortBy = ref(1);
-const size = ref(100);
+const size = 30;
 const Activities = ref([]);
 const page = ref(1);
 const selectedActivity = ref({});
@@ -28,22 +28,25 @@ const fetchActivities = async () => {
   loading.value = true;
   Activities.value = [];
   if (sortBy.value == 0) {
-    const res = await request.get(`/activity/week/subscribe/${today}/${page.value}/${size.value}/${tag.value}`).then(res => res.data.data).catch(err => {
+    const res = await request.get(`/activity/week/subscribe/${today}/${page.value}/${size}/${tag.value}`).then(res => res.data.data).catch(() => {
+      toast.error('获取活动失败');
+    });
+    Activities.value = res.records;
+    totalPage.value = res.pages;
+  } else if (sortBy.value == 1) {
+    const res = await request.get(`/activity/week/view/${today}/${page.value}/${size}/${tag.value}`).then(res => res.data.data).catch(err => {
       console.log('err', err);
+      toast.error('获取活动失败');
     });
     Activities.value = res.records;
     totalPage.value = res.pages;
   } else {
-    const res = await request.get(`/activity/week/view/${today}/${page.value}/${size.value}/${tag.value}`).then(res => res.data.data).catch(err => {
+    const res = await request.get(`/activity/week/default/${today}/${page.value}/${size}/${tag.value}`).then(res => res.data.data).catch(err => {
       console.log('err', err);
+      toast.error('获取活动失败');
     });
     Activities.value = res.records;
     totalPage.value = res.pages;
-  }
-  if (sortBy.value == 2) {
-    Activities.value.sort((a, b) => {
-      return new Date(a.startDate + ' ' + a.startTime) - new Date(b.startDate + ' ' + b.startTime);
-    });
   }
   previous = Activities.value;
   loading.value = false;
@@ -65,6 +68,7 @@ async function subscribe(id) {
     })
     .catch(err => {
       console.log('err', err);
+      toast.error('订阅失败');
     });
 }
 
@@ -152,7 +156,7 @@ watch(keywords, (newVal) => {
 <div class="hidden lg:flex flex-col items-center mx-20 2xl:mx-32 mb-10 overflow-x-clip">
   <table class="table table-zebra table-pin-rows xl:table-lg">
     <thead>
-      <tr>
+      <tr class="bg-base-100/70 font-semibold backdrop-blur-lg">
         <th>活动名称</th>
         <th>活动标签</th>
         <th>活动日期</th>
