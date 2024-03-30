@@ -27,7 +27,6 @@ let previous = [];
 const fetchActivities = async () => {
   loading.value = true;
   Activities.value = [];
-  page.value = 1;
   if (sortBy.value == 0) {
     const res = await request.get(`/activity/week/subscribe/${today}/${page.value}/${size}/${tag.value}`).then(res => res.data.data).catch(() => {
       toast.error('获取活动失败');
@@ -76,7 +75,11 @@ async function subscribe(id) {
 onMounted(() => {
   fetchActivities();
 })
-watch([page,tag,sortBy], () => {
+watch([page], () => {
+  fetchActivities();
+})
+watch([tag,sortBy], () => {
+  page.value = 1;
   fetchActivities();
 })
 watch(keywords, (newVal) => {
