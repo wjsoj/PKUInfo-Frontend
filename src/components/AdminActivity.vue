@@ -31,6 +31,20 @@ async function deleteActivity() {
     toast.error('删除失败');
   });
 }
+// PUT /admin/activity body: newActivity
+async function changeActivity() {
+  console.log(newActivity.value);
+  request.put('/admin/activity', newActivity.value).then(res => {
+    if (res.data.code === 200) {
+      toast.success('修改成功');
+      fetchUser();
+    } else {
+      toast.error('修改失败');
+    }
+  }).catch(() => {
+    toast.error('修改失败');
+  });
+}
 
 onMounted(() => {
   fetchUser();

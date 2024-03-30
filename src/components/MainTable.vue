@@ -12,7 +12,7 @@ const toast = useToast();
 const infoStore = useInfoStore();
 const { loginStatus } = storeToRefs(infoStore);
 
-const sortBy = ref(1);
+const sortBy = ref(2);
 const size = 30;
 const Activities = ref([]);
 const page = ref(1);
@@ -27,6 +27,7 @@ let previous = [];
 const fetchActivities = async () => {
   loading.value = true;
   Activities.value = [];
+  page.value = 1;
   if (sortBy.value == 0) {
     const res = await request.get(`/activity/week/subscribe/${today}/${page.value}/${size}/${tag.value}`).then(res => res.data.data).catch(() => {
       toast.error('获取活动失败');
@@ -217,8 +218,6 @@ watch(keywords, (newVal) => {
 </div>
 </template>
 
-<!-- create slidein animation for every tr element -->
-
 <style scoped>
 @keyframes slidein {
   from {
@@ -231,7 +230,6 @@ watch(keywords, (newVal) => {
   }
 }
 
-/* execute animation for every tr element in order, delay 0.1s for each */
 tbody tr {
   animation: slidein 0.5s ease-out;
 }
