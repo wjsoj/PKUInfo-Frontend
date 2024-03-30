@@ -161,9 +161,9 @@ function downloadCalendar() {
   <!-- 日历卡片 -->
   <div>
     <div class="flex max-w-screen-sm flex-col items-center py-10 space-y-2">
-      <div v-for="record in props.SubcribedList.filter(item => moment(item.startDate).isSame(selectedDate, 'day'))" :key="record.id" class="relative">
+      <div v-for="record in props.SubcribedList.filter(item => moment(item.startDate).isSame(selectedDate, 'day'))" :key="record.id" class="relative z-0">
+        <button class="btn btn-xs btn-primary btn-outline absolute rounded-box cursor-pointer top-0.5 right-0.5 z-20 slide" @click="unsubscribe(record.id)">取消订阅</button>
         <ActivityCard :activity="record"/>
-        <button class="btn btn-xs btn-primary btn-outline absolute rounded-box cursor-pointer top-0.5 right-0.5 z-10 slide" @click="unsubscribe(record.id)">取消订阅</button>
       </div>
     </div>
     <div v-if="props.SubcribedList.filter(item => moment(item.startDate).isSame(selectedDate, 'day')).length == 0">
