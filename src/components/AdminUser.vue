@@ -3,6 +3,7 @@ import { request } from '@/utils/request';
 import { onMounted, ref } from 'vue';
 import { useToast } from 'vue-toastification';
 import { encrypt } from '@/utils/aes';
+import { getVisitDay,getVisitMonth } from '@/utils/visit';
 const toast = useToast();
 const user = ref([]);
 const loading = ref(false);
@@ -10,6 +11,8 @@ const selectedUser = ref(-100);
 const username = ref('');
 const password = ref('');
 const dpassword = ref('');
+const visitday = ref(0);
+const visitmonth = ref(0);
 
 async function fetchUser() {
   user.value = [];
@@ -56,8 +59,14 @@ async function addAdmin() {
   });
 }
 
+async function getStat() {
+  visitday.value = await getVisitDay();
+  visitmonth.value = await getVisitMonth();
+}
+
 onMounted(() => {
   fetchUser();
+  getStat();
 });
 </script>
 
@@ -105,8 +114,22 @@ onMounted(() => {
   </div>
 </dialog>
 
-<div class="my-10">
-  <button class="mx-auto btn w-2/5 ml-10 btn-primary btn-outline" onclick="addAdmin.showModal()">管理员注册</button>
+<div class="my-10 flex flex-col">
+  <button class="btn ml-4 w-2/5 btn-primary btn-outline" onclick="addAdmin.showModal()">管理员注册</button>
+  <div class="stats bg-base-100/50 shadow my-4">
+    <div class="stat">
+      <div class="stat-title">总注册用户数</div>
+      <div class="stat-value">{{ user.length }}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">最近24h访客数</div>
+      <div class="stat-value">{{ visitday }}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">最近30天访客数</div>
+      <div class="stat-value">{{ visitmonth }}</div>
+    </div>
+  </div>
   <table class="table mt-4">
     <thead>
       <tr class="text-lg font-semibold text-base-content">

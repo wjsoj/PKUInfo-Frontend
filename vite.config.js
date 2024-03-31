@@ -56,6 +56,10 @@ export default defineConfig({
         target: 'https://m.gsdata.cn',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/account/, '/api/account/search/list'),
+      },
+      '/monitor': {
+        target: 'https://pkuinfo.lcpu.dev',
+        changeOrigin: true,
       }
     }
   }

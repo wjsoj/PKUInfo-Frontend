@@ -13,9 +13,11 @@ const newActivity = ref({});
 async function fetchUser() {
   Activities.value = [];
   loading.value = true;
-  Activities.value = await request.get('/admin/activity').then(res => res.data.data).catch(() => {
+  let res = await request.get('/admin/activity').then(res => res.data.data).catch(() => {
     toast.error('获取活动信息失败');
   });
+  // 按title排序
+  Activities.value = res.sort((a, b) => a.title.localeCompare(b.title));
   loading.value = false;
 }
 
@@ -44,6 +46,10 @@ async function changeActivity() {
   }).catch(() => {
     toast.error('修改失败');
   });
+}
+// 检测title重复
+function isDuplicated(activity) {
+  return Activities.value.filter((item) => item.title === activity.title).length > 1;
 }
 
 onMounted(() => {
@@ -126,6 +132,7 @@ watch(keywords, (newVal) => {
   <div v-for="activity in Activities" :key="activity.id" class="flex flex-col items-center">
     <div class="flex flex-row justify-between w-full">
       <div class="grow self-start text-lg font-bold">{{ activity.title }}</div>
+      <div v-if="isDuplicated(activity)" class="text-error font-semibold self-end text-nowrap">标题重复</div>
       <button class="btn btn-xs lg:btn-sm btn-outline btn-primary self-end ml-2" @click="selectedActivity = activity" onclick="deleteconfirm.showModal()">删除</button>
       <button class="btn btn-xs lg:btn-sm btn-secondary self-end ml-2" @click="selectedActivity = activity;newActivity = activity" onclick="modifyconfirm.showModal()">修改</button>
     </div>
