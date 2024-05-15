@@ -1,7 +1,11 @@
 <script setup>
 import MainTable from '@/components/MainTable.vue';
+import FooterContent from '@/components/FooterContent.vue';
 </script>
 
 <template>
-  <MainTable />
+  <div class="min-h-screen">
+    <MainTable />
+  </div>
+  <FooterContent />
 </template>
