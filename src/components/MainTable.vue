@@ -77,6 +77,7 @@ onMounted(() => {
 })
 watch([page], () => {
   fetchActivities();
+  scrollTo(0, 0);
 })
 watch([tag,sortBy], () => {
   page.value = 1;
