@@ -15,8 +15,19 @@ export async function getVisitDay() {
       Authorization: `Bearer ${token}`
     }
   }).then(res => {
-    console.log(res.data.uniques.value)
     return res.data.uniques.value
+  })
+}
+
+export async function getVisitWeek() {
+  const endAt = Date.now()
+  const startAt = endAt - 24 * 60 * 60 * 1000 * 7
+  return await axios.get(`${baseURL}/websites/${websiteId}/stats/?startAt=${startAt}&endAt=${endAt}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }).then(res => {
+    return res.data.pageviews.value
   })
 }
 
@@ -29,5 +40,3 @@ export async function getVisitMonth() {
     }
   }).then(res => res.data.uniques.value )
 }
-
-export default { getVisitDay }
