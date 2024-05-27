@@ -1,17 +1,4 @@
 <script setup>
-import { onMounted,ref } from 'vue';
-import { getVisitWeek } from '@/utils/visit';
-
-let visitweek = ref(0);
-
-async function getWeekStat() {
-  visitweek.value = await getVisitWeek();
-}
-
-onMounted(() => {
-  getWeekStat()
-});
-
 // // 监听滚动事件，当滚动到底部时，延迟3s移出页脚，向上滚动则恢复页脚
 // onMounted(() => {
 //   const footer = document.querySelector('footer');
@@ -39,8 +26,6 @@ onMounted(() => {
         PKU Info 项目组
         <br class="block md:hidden" /> 
         Powered By <span class="tooltip text-primary" data-tip="Linux Club Of Peking University">LCPU</span> 
-        <br />
-        近一周浏览量 <span class="font-bold"> {{ visitweek }} 人次</span>
       </p>
     </div>
   </footer>
