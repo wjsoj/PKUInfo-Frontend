@@ -21,7 +21,7 @@ export async function getVisitDay() {
 
 export async function getVisitWeek() {
   const endAt = Date.now()
-  const startAt = endAt - 24 * 60 * 60 * 1000 * 7
+  const startAt = endAt - 24 * 60 * 60 * 1000 * 3
   return await axios.get(`${baseURL}/websites/${websiteId}/stats/?startAt=${startAt}&endAt=${endAt}`, {
     headers: {
       Authorization: `Bearer ${token}`
