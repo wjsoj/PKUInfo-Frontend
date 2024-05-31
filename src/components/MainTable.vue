@@ -121,7 +121,7 @@ watch(keywords, (newVal) => {
 <template>
 <!-- 头部选择框 -->
 <div class="mx-auto mt-2 flex flex-col items-center">
-  <p class="text-xs font-semibold">近一周网站浏览量 <span class="text-primary">{{ visitweek }} 人次</span></p>
+  <p class="text-xs font-semibold">近三天网站浏览量 <span class="text-primary">{{ visitweek }} 人次</span></p>
   <p class="text-xs text-base-content/80 ">显示未来七天内的活动</p>
 </div>
 <div class="flex flex-col space-y-2 lg:flex-row justify-between mx-4 lg:mx-24 2xl:mx-32 my-2">
