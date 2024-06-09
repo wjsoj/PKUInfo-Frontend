@@ -13,15 +13,15 @@ const scrollToTop = () => {
 }
 
 // open Image /groupqrcode.png in new tab
-function downImage() {
-  const a = document.createElement('a');
-  a.href = '/groupqrcode.png';
-  a.download = 'groupqrcode.png';
-  a.click();
-}
-const noremind = () => {
-  localStorage.setItem('noreminder', 'true');
-}
+// function downImage() {
+//   const a = document.createElement('a');
+//   a.href = '/groupqrcode.png';
+//   a.download = 'groupqrcode.png';
+//   a.click();
+// }
+// const noremind = () => {
+//   localStorage.setItem('noreminder', 'true');
+// }
 
 const themeSupport = window.CSS.supports('color', 'oklch(0 0 0)');
 
@@ -49,7 +49,7 @@ onMounted(() => {
   <div v-if="themeSupport" class="fixed z-0 top-0 right-0 w-[250px] lg:w-[1000px] lg:h-[600px] h-[660px] bg-gradient-to-bl from-primary/10 to-accent/10 blur-3xl rounded-bl-full"></div>
   <div class="grow flex flex-col relative">
     <!-- reminder -->
-    <dialog id="popdialog" class="modal">
+    <!-- <dialog id="popdialog" class="modal">
       <div class="modal-box flex flex-col">
         <h3 class="font-bold text-2xl">PKU Info用户群</h3>
         <p class="text-lg">我们正在持续迭代版本，期待听到您的意见！</p>
@@ -65,7 +65,7 @@ onMounted(() => {
       <form method="dialog" class="modal-backdrop">
         <button>close</button>
       </form>
-    </dialog>
+    </dialog> -->
 
     <RouterView />
     <!-- backtotop button  -->
