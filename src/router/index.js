@@ -17,6 +17,11 @@ const router = createRouter({
       component: CalendarView
     },
     {
+      path: '/chat',
+      name: 'chat',
+      component: () => import('../views/ChatView.vue')
+    },
+    {
       path: '/profile',
       name: 'profile',
       // 懒加载

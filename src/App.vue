@@ -12,18 +12,27 @@ const scrollToTop = () => {
   });
 }
 
-// open Image /groupqrcode.png in new tab
-// function downImage() {
-//   const a = document.createElement('a');
-//   a.href = '/groupqrcode.png';
-//   a.download = 'groupqrcode.png';
-//   a.click();
-// }
-// const noremind = () => {
-//   localStorage.setItem('noreminder', 'true');
-// }
+const noremind = () => {
+  localStorage.setItem('noreminder', 'true');
+}
 
 const themeSupport = window.CSS.supports('color', 'oklch(0 0 0)');
+
+let deferredPrompt = null;
+
+async function installPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const choiceResult = await deferredPrompt.userChoice;
+    if (choiceResult.outcome === 'accepted') {
+      console.log('User accepted the A2HS prompt');
+      localStorage.setItem('noreminder', 'true');
+    } else {
+      console.log('User dismissed the A2HS prompt');
+    }
+    deferredPrompt = null;
+  }
+}
 
 onMounted(() => {
   // 当滑动距离大于100时显示返回顶部按钮
@@ -36,9 +45,13 @@ onMounted(() => {
     }
   }
   clickEffect();
-  if (!localStorage.getItem('noreminder')) {
-    document.getElementById('popdialog').showModal();
-  }
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (!localStorage.getItem('noreminder')) {
+      document.getElementById('popdialog').showModal();
+    }
+  });
 });
 </script>
 
@@ -49,27 +62,27 @@ onMounted(() => {
   <div v-if="themeSupport" class="fixed z-0 top-0 right-0 w-[250px] lg:w-[1000px] lg:h-[600px] h-[660px] bg-gradient-to-bl from-primary/10 to-accent/10 blur-3xl rounded-bl-full"></div>
   <div class="grow flex flex-col relative">
     <!-- reminder -->
-    <!-- <dialog id="popdialog" class="modal">
+    <dialog id="popdialog" class="modal">
       <div class="modal-box flex flex-col">
-        <h3 class="font-bold text-2xl">PKU Info用户群</h3>
-        <p class="text-lg">我们正在持续迭代版本，期待听到您的意见！</p>
-        <p class="text-sm text-base-content/70">点击图片可保存到本地，“不再提醒”功能在无痕模式下可能失效</p>
-        <img src="/groupqrcode.png" class="lg:w-4/5 self-center" alt="groupQRcode" @click="downImage" />
+        <h3 class="font-bold text-2xl">PKU Info PWA</h3>
+        <p class="text-lg">网站现已支持PWA技术，安装至桌面已获得更便捷的体验！</p>
+        <p class="text-sm text-base-content/70">点击安装以开启浏览器内置弹窗，在Safari上可能失效。</p>
+        <!-- <img src="/groupqrcode.png" class="lg:w-4/5 self-center" alt="groupQRcode" @click="downImage" /> -->
         <div class="modal-action">
           <form method="dialog">
             <button class="btn btn-sm btn-primary" @click="noremind">不再提醒并关闭</button>
-            <button class="btn btn-sm ml-4">关闭</button>
+            <button class="btn btn-sm ml-4" @click="installPWA">立即安装</button>
           </form>
         </div>
       </div>
       <form method="dialog" class="modal-backdrop">
         <button>close</button>
       </form>
-    </dialog> -->
+    </dialog>
 
     <RouterView />
     <!-- backtotop button  -->
-    <div class="hidden fixed bottom-4 lg:bottom-12 right-4 cursor-pointer z-50" id="backTop">
+    <div class="hidden fixed bottom-20 lg:bottom-12 right-4 cursor-pointer z-50" id="backTop">
       <button class="btn btn-circle btn-accent bg-opacity-70" @click="scrollToTop">
         <ArrowBigUpDash />
       </button>

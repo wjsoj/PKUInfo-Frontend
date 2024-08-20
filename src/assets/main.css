@@ -5,3 +5,7 @@
 .Vue-Toastification__container.my-container-class{
   z-index: 9999;
 }
+
+.answer a{
+  @apply text-info hover:font-semibold;
+}
