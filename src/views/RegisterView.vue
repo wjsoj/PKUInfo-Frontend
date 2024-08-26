@@ -3,7 +3,7 @@ import { reactive, ref } from 'vue';
 import { request } from '@/utils/request';
 import { useToast } from 'vue-toastification';
 import { useRoute, useRouter } from 'vue-router';
-import { Mail } from 'lucide-vue-next';
+import { Mail,ShieldCheck } from 'lucide-vue-next';
 import { encrypt } from '@/utils/aes';
 import { Eye, EyeOff } from 'lucide-vue-next';
 import zxcvbn from 'zxcvbn';
@@ -14,12 +14,51 @@ const route = useRoute();
 const user = reactive({
   username: '',
   password: '',
-  email: ''
+  email: '',
+  code: ''
 })
 const showPassword = ref(false)
+const canSendCode = ref(true)
+const countDown = ref(60)
+
+async function sendCode() {
+  if (user.email === '') {
+    toast.error('邮箱不能为空')
+    return;
+  }
+  // 验证user.email是否为邮箱
+  if (!/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(user.email)) {
+    toast.error('邮箱格式错误，请检查信息')
+    return;
+  }
+  canSendCode.value = false
+  await request.post('/register/email', {
+    email: user.email
+  }).then((res) => {
+    if (res.data.code === 200) {
+      toast.success('验证码发送成功')
+    }
+    else {
+      toast.error(res.data.message)
+    }
+  }).catch((err) => {
+    console.log(err)
+    toast.error('验证码发送失败')
+  })
+  setTimeout(() => {
+    canSendCode.value = true
+  }, 60000)
+  const timer = setInterval(() => {
+    countDown.value--
+    if (countDown.value === 0) {
+      clearInterval(timer)
+      countDown.value = 60
+    }
+  }, 1000)
+}
 
 async function signup() {
-  if (user.username === '' || user.password === '' || user.email === '') {
+  if (user.username === '' || user.password === '' || user.email === '' || user.code === '') {
     toast.error('填写信息不能为空')
     return;
   }
@@ -33,7 +72,8 @@ async function signup() {
   await request.put('/register', {
     username: user.username,
     password: encrypt(user.password),
-    email: user.email
+    email: user.email,
+    code: user.code
   }).then((res) => {
     if (res.data.code === 200) {
       toast.success('注册成功')
@@ -46,12 +86,7 @@ async function signup() {
       })
     }
     else {
-      if (res.data.code === 400) {
-        toast.error('用户名已存在')
-      }
-      else {
-        toast.error('数据库异常')
-      }
+      toast.error(res.data.message)
     }
   }).catch((err) => {
     console.log(err)
@@ -62,11 +97,17 @@ async function signup() {
 </script>
 
 <template>
-  <div class="grow flex flex-col space-y-4 justify-center items-center h-full">
-    <h1 class="text-2xl font-bold">注册</h1>
+  <div class="self-center items-center space-y-4 my-auto">
+    <h1 class="text-2xl font-bold w-full text-center">注册</h1>
     <label class="input input-bordered flex items-center gap-2">
       <Mail class="w-4"/>
       <input type="email" class="grow" placeholder="Email" v-model="user.email" />
+      <span class="btn btn-xs btn-ghost" v-if="canSendCode" @click="sendCode">获取验证码</span>
+      <span class="btn btn-xs btn-primary btn-disabled" v-else>{{ countDown }}s后重试</span>
+    </label>
+    <label class="input input-bordered flex items-center gap-2">
+      <ShieldCheck class="w-4"/>
+      <input type="text" class="grow" placeholder="邮箱验证码" v-model="user.code" />
     </label>
     <label class="input input-bordered flex items-center gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" /></svg>

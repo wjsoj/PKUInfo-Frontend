@@ -49,4 +49,9 @@ export const checkDate = (date) => {
 
 export const themes = [{label:'Light',value:'fantasy'},{label:'Dark',value:'dark'},{label:'Lemonade',value:'lemonade'},{label:'Luxury',value:'luxury'}];
 
-export default { map,tag_list,getFormatTime,getTagList,checkDate,themes }
+export const problemList = [
+  ["校园内的自习地点","周二第5节理教107在上什么课","介绍一下博雅塔","最近学校里面有哪些讲座活动","如何找实习信息"],
+  ["今日北京天气","今日黄历","今日早报","美元兑人民币实时汇率"],
+]
+
+export default { map,tag_list,getFormatTime,getTagList,checkDate,themes,problemList }

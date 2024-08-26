@@ -3,6 +3,7 @@ import { ref,watch,nextTick } from 'vue';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { useToast } from 'vue-toastification';
 import ChatAI from './ChatAI.vue'
+import { problemList } from './constant'
 
 const toast = useToast();
 let messages = ref([])
@@ -64,7 +65,7 @@ function getResponse(message,mid = messages.value.length - 1) {
       if (msg.data === '[DONE]') {
         messages.value[mid].status = "对话完成"
         loading.value = false
-        async () => {
+        if (regenerating.value) {
           setTimeout(() => {
             regenerating.value = false
           }, 300);
@@ -81,6 +82,7 @@ function getResponse(message,mid = messages.value.length - 1) {
           messages.value[mid].time = data.reduce((acc, cur) => {
             return acc + cur.runningTime
           }, 0)
+          messages.value[mid].time = messages.value[mid].time.toFixed(2)
           inputContainer.value.focus()
           break;
         }
@@ -148,6 +150,10 @@ function sendMessage() {
   getResponse(messageInput.value)
   messageInput.value = ''
 }
+function initProblem(problem) {
+  messageInput.value = problem
+  sendMessage()
+}
 
 function refresh() {
   messages.value = []
@@ -213,11 +219,22 @@ watch(messageInput, () => {
 <!-- Prompt Messages Container - Modify the height according to your need -->
 <div class="flex h-full min-h-[90vh] bg-base-200/50 w-full lg:px-24 lg:py-6 flex-col">
   <!-- Prompt Messages -->
-  <div v-if="messages.length === 0" class="flex-1 w-full h-full flex items-center justify-center">
-    <div class="rounded-2xl p-10 border-[0.5px] border-primary shadow-lg bg-gradient-to-br from-base-100 to-primary/10">
-      <h1 class="font-bold text-2xl mb-4">Info AI 小助手</h1>
-      <h2 class="">你可以问我...</h2>
-      <p>随便写点啥</p>
+  <div v-if="messages.length === 0" class="flex flex-col items-center justify-center border-[0.5px] border-primary shadow-lg bg-gradient-to-br from-base-100 to-primary/10 rounded-2xl mx-4 px-4 py-10 lg:p-10 mt-4 md:mt-24">
+    <h1 class="text-2xl font-semibold text-primary">PKU Info AI 小助手</h1>
+    <div class="flex flex-col items-center md:items-start md:grid md:grid-cols-3 space-x-8 justify-center mt-4">
+      <img src="/illustration.png" alt="Illustration" class="w-2/3 mb-4" />
+      <div class="flex flex-col space-y-1 w-full">
+        <h2 class="font-semibold text-xl my-2">校园生活</h2>
+        <p class=" text-sky-600 cursor-pointer hover:underline" v-for="(problem,index) in problemList[0]" :key="index" @click="initProblem(problem)">
+          {{ problem }}
+        </p>
+      </div>
+      <div class="flex flex-col space-y-1 w-full">
+        <h2 class="font-semibold text-xl my-2">不实用小工具</h2>
+        <p class=" text-sky-600 cursor-pointer hover:underline" v-for="(problem,index) in problemList[1]" :key="index" @click="initProblem(problem)">
+          {{ problem }}
+        </p>
+      </div>
     </div>
   </div>
 
@@ -297,7 +314,7 @@ watch(messageInput, () => {
       </div>
       <!-- AI回答 -->
       <div
-        class="mb-2 flex flex-col rounded-xl bg-base-100 px-2 py-6 sm:px-4 transition-all ease-in-out duration-300"
+        class="mb-2 flex flex-col overflow-x-hidden rounded-xl bg-base-100 px-2 py-6 sm:px-4 transition-all ease-in-out duration-300"
       >
         <ChatAI :message="message" @change-quote="getQuote" />
       </div>
