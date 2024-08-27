@@ -15,9 +15,9 @@ let loading = ref(false)
 let regenerating = ref(false)
 let ctrl = new AbortController();
 
-function getQuote(quote) {
-  quoting.value = quote
-}
+// function getQuote(quote) {
+//   quoting.value = quote
+// }
 // \n替换为html空格
 function processString(str) {
   return str.replace(/\/n/g, '<br/>');
@@ -322,7 +322,8 @@ watch(messageInput, () => {
       <div
         class="mb-2 flex flex-col overflow-x-hidden rounded-xl bg-base-100 px-2 py-6 sm:px-4 transition-all ease-in-out duration-300"
       >
-        <ChatAI :message="message" @change-quote="getQuote" />
+        <ChatAI :message="message" />
+        <!-- <ChatAI :message="message" @change-quote="getQuote" /> -->
       </div>
     </template>
   </div>

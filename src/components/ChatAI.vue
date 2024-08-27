@@ -1,6 +1,6 @@
 <script setup>
 const { message } = defineProps(['message']);
-const emit = defineEmits(['changeQuote']);
+// const emit = defineEmits(['changeQuote']);
 import { ref,watch } from 'vue';
 import MarkdownIt from 'markdown-it';
 
@@ -22,7 +22,8 @@ watch(() => message.answer, () => {
     <div class="px-2 lg:px-4 lg:py-1 bg-gradient-to-br from-primary/30 to-accent/30 text-base-content font-semibold rounded-2xl">
       {{ message.status }}
     </div>
-    <p v-if="message.quote.length" class="cursor-pointer bg-primary/70 text-primary-content lg:py-1 font-semibold rounded-2xl px-2" @click="emit('changeQuote',message.quote)" onclick="knowledge.showModal()">
+    <p v-if="message.quote.length" class="cursor-pointer bg-primary/70 text-primary-content lg:py-1 font-semibold rounded-2xl px-2">
+      <!-- @click="emit('changeQuote',message.quote)" onclick="knowledge.showModal()" -->
       知识库引用：{{ message.quote.length }}条
     </p>
     <p v-if="message.time" class="lg:py-1 bg-accent/70 text-accent-content font-semibold rounded-2xl px-2">
