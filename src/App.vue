@@ -13,7 +13,7 @@ const scrollToTop = () => {
 }
 
 const noremind = () => {
-  localStorage.setItem('noreminder', 'true');
+  localStorage.setItem('noreminder2', 'true');
 }
 
 const themeSupport = window.CSS.supports('color', 'oklch(0 0 0)');
@@ -26,7 +26,7 @@ async function installPWA() {
     const choiceResult = await deferredPrompt.userChoice;
     if (choiceResult.outcome === 'accepted') {
       console.log('User accepted the A2HS prompt');
-      localStorage.setItem('noreminder', 'true');
+      localStorage.setItem('noreminder2', 'true');
     } else {
       console.log('User dismissed the A2HS prompt');
     }
@@ -46,9 +46,10 @@ onMounted(() => {
   }
   clickEffect();
   window.addEventListener('beforeinstallprompt', (e) => {
+    console.log('beforeinstallprompt Event fired');
     e.preventDefault();
     deferredPrompt = e;
-    if (!localStorage.getItem('noreminder')) {
+    if (!localStorage.getItem('noreminder2')) {
       document.getElementById('popdialog').showModal();
     }
   });
