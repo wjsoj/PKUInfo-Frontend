@@ -26,14 +26,20 @@ function getResponse(message,mid = messages.value.length - 1) {
   class RetriableError extends Error { }
   class FatalError extends Error { }
 
+  if (sessionStorage.getItem('auth') === null) {
+    toast.error('未登录，请先登录');
+    return;
+  }
+  // /api/auth/stream/chat
+
   fetchEventSource('https://fastgpt.wjsphy.top/api/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': 'Bearer fastgpt-e8xpZ8vdkcLWuUFhP7ilNJsgUWvqZoFQkRucaFaCksgrXBdfdsDPXK4d1vdCeG',
+      'Authorization': `Bearer fastgpt-e8xpZ8vdkcLWuUFhP7ilNJsgUWvqZoFQkRucaFaCksgrXBdfdsDPXK4d1vdCeG`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      chatId: 'test12345',
+      chatId: 'test12356',
       stream: true,
       detail: true,
       // variables: {

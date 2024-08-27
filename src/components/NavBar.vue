@@ -100,15 +100,15 @@ onMounted(() => {
         </summary>
         <ul class="menu dropdown-content z-[1] p-2 shadow bg-base-200 rounded-sm mt-3 w-28" @click="closeDropdown">
           <li>
-            <RouterLink to="/" replace>活动列表</RouterLink></li>
+            <RouterLink to="/" replace>AI对话</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/home" replace>活动列表</RouterLink></li>
           <li>
             <RouterLink to="/calendar" replace>活动日历</RouterLink>
           </li>
           <li>
             <RouterLink to="/profile" replace>订阅活动</RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/submit" replace>提交信息</RouterLink>
           </li>
         </ul>
       </details>
@@ -119,10 +119,10 @@ onMounted(() => {
 
     <div class="navbar-end">
       <div class="hidden lg:flex flex-row space-x-4 mr-6">
-        <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/')" to="/" replace>活动列表</RouterLink>
+        <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/')" to="/" replace>AI对话</RouterLink>
+        <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/home')" to="/home" replace>活动列表</RouterLink>
         <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/calendar')" to="/calendar" replace>活动日历</RouterLink>
         <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/profile')" to="/profile" replace>订阅活动</RouterLink>
-        <RouterLink class="font-semibold hover:underline underline-offset-8" :class="activeClass('/about')" to="/submit" replace>提交信息</RouterLink>
       </div>
       <div class="dropdown" v-if="themeSupport">
         <div tabindex="0" role="button" class="btn bg-transparent border-none m-0">
