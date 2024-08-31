@@ -31,17 +31,19 @@ function getResponse(message,mid = messages.value.length - 1) {
     return;
   }
   // /api/auth/stream/chat
-
-  fetchEventSource('https://fastgpt.wjsphy.top/api/v1/chat/completions', {
+  // sessionStorage.getItem('auth')
+  // https://fastgpt.wjsphy.top/api/v1/chat/completions
+  // import.meta.env.VITE_API_KEY
+  fetchEventSource('/api/auth/stream/chat', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer fastgpt-e8xpZ8vdkcLWuUFhP7ilNJsgUWvqZoFQkRucaFaCksgrXBdfdsDPXK4d1vdCeG`,
+      'Authorization': `Bearer ${sessionStorage.getItem('auth')}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      chatId: 'test12356',
-      stream: true,
-      detail: true,
+      // chatId: 'test12356',
+      // stream: true,
+      // detail: true,
       // variables: {
       //   cTime: `${new Date().toISOString().split('T')[0]} ${new Date().toTimeString().split(' ')[0]} ${["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][new Date().getDay()]}`
       // },
@@ -69,14 +71,7 @@ function getResponse(message,mid = messages.value.length - 1) {
     onmessage(msg) {
       // console.log(msg)
       if (msg.data === '[DONE]') {
-        messages.value[mid].status = "对话完成"
-        loading.value = false
-        if (regenerating.value) {
-          setTimeout(() => {
-            regenerating.value = false
-          }, 300);
-        }
-        return;
+        return
       }
       let data = JSON.parse(msg.data);
       switch (msg.event) {
@@ -110,9 +105,17 @@ function getResponse(message,mid = messages.value.length - 1) {
           if (data.choices[0].finish_reason == null) {
             messages.value[mid].answer += data.choices[0].delta.content
           } else {
-            if (data.choices[0].finish_reason != 'stop') {
+            if (data.choices[0].finish_reason == 'stop') {
+              messages.value[mid].status = "对话完成"
+              loading.value = false
+              if (regenerating.value) {
+                setTimeout(() => {
+                  regenerating.value = false
+                }, 300);
+              }
+            } else {
               console.error('Unexpected finish reason:', data.choices[0].finish_reason);
-            }  
+            }
           }
         }
       }
