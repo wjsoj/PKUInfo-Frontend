@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import { request } from '@/utils/request';
 import { useToast } from 'vue-toastification';
 import { useRoute, useRouter } from 'vue-router';
@@ -10,6 +10,7 @@ import zxcvbn from 'zxcvbn';
 const toast = useToast();
 const router = useRouter();
 const route = useRoute();
+const canSendCode = ref(true)
 
 const user = reactive({
   username: '',
@@ -18,7 +19,6 @@ const user = reactive({
   code: ''
 })
 const showPassword = ref(false)
-const canSendCode = ref(true)
 const countDown = ref(60)
 
 async function sendCode() {
@@ -31,10 +31,17 @@ async function sendCode() {
     toast.error('邮箱格式错误，请检查信息')
     return;
   }
+  if (!user.email.endsWith('pku.edu.cn')) {
+    toast.error('请使用pku后缀邮箱')
+    return;
+  }
   canSendCode.value = false
-  await request.post('/register/email', {
-    email: user.email
-  }).then((res) => {
+  sessionStorage.setItem('canSendCode', false)
+  await request.post(
+    '/register/email',
+    { email: user.email },
+    { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+  ).then((res) => {
     if (res.data.code === 200) {
       toast.success('验证码发送成功')
     }
@@ -47,6 +54,7 @@ async function sendCode() {
   })
   setTimeout(() => {
     canSendCode.value = true
+    sessionStorage.setItem('canSendCode', true)
   }, 60000)
   const timer = setInterval(() => {
     countDown.value--
@@ -94,6 +102,22 @@ async function signup() {
   })
 }
 
+onMounted(() => {
+  if (sessionStorage.getItem('canSendCode') === 'false') {
+    canSendCode.value = false
+    const timer = setInterval(() => {
+      countDown.value--
+      if (countDown.value === 0) {
+        clearInterval(timer)
+        countDown.value = 60
+      }
+    }, 1000)
+    setTimeout(() => {
+      canSendCode.value = true
+      sessionStorage.setItem('canSendCode', true)
+    }, 60000)
+  }
+})
 </script>
 
 <template>
@@ -101,7 +125,7 @@ async function signup() {
     <h1 class="text-2xl font-bold w-full text-center">注册</h1>
     <label class="input input-bordered flex items-center gap-2">
       <Mail class="w-4"/>
-      <input type="email" class="grow" placeholder="Email" v-model="user.email" />
+      <input type="email" class="grow" placeholder="请使用pku后缀邮箱" v-model="user.email" />
       <span class="btn btn-xs btn-ghost" v-if="canSendCode" @click="sendCode">获取验证码</span>
       <span class="btn btn-xs btn-primary btn-disabled" v-else>{{ countDown }}s后重试</span>
     </label>

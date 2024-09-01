@@ -26,9 +26,8 @@ function signout() {
     localStorage.removeItem('username')
     localStorage.removeItem('password')
   }
-  if (router.currentRoute.value.path === '/profile') {
-    router.replace('/');
-  }
+  router.replace('/')
+  location.reload();
   toast.info('注销成功',{
     timeout: 2000
   });
