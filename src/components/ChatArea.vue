@@ -4,6 +4,7 @@ import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { useToast } from 'vue-toastification';
 import ChatAI from './ChatAI.vue'
 import { problemList } from './constant'
+import { request } from '../utils/request'
 
 const toast = useToast();
 let messages = ref([])
@@ -14,6 +15,8 @@ let id = ref(0)
 let loading = ref(false)
 let regenerating = ref(false)
 let ctrl = new AbortController();
+
+const editMessage = ref({})
 
 // function getQuote(quote) {
 //   quoting.value = quote
@@ -185,6 +188,34 @@ function regenerate(mid) {
   getResponse(messages.value[mid].ask,mid)
 }
 
+async function addFeedback() {
+  if (editMessage.value.answer.trim() === '') {
+    toast.error('请输入回答内容');
+    return;
+  }
+  await request({
+    url: '/auth/chat/feedback',
+    method: 'POST',
+    data: {
+      data: [
+        {
+          q: editMessage.value.ask,
+          a: editMessage.value.answer
+        }
+      ]
+    }
+  }).then((res) => {
+    if (res.code !== 200) {
+      toast.error('反馈失败');
+      return;
+    }
+    toast.success('反馈成功');
+    editMessage.value = {}
+  }).catch(() => {
+    toast.error('反馈失败');
+  });
+}
+
 // 有新对话时滚动到当前变化发生的位置
 watch(messages, () => {
   nextTick(() => {
@@ -224,6 +255,26 @@ watch(messageInput, () => {
   </form>
 </dialog>
 
+<dialog id="feedback" class="modal">
+  <div class="modal-box">
+    <h2 class="font-semibold text-2xl mb-2">反馈</h2>
+    <div class="flex flex-col space-y-2 my-2" >
+      <h2 class="text-xl font-semibold">问题</h2>
+      <p>{{ editMessage.ask }}</p>
+      <h2 class="text-xl font-semibold">回答</h2>
+      <textarea v-model="editMessage.answer" class="textarea textarea-info font-mono min-h-64" placeholder="请输入您认为合适的回答" />
+    </div>
+    <div class="modal-action">
+    <form method="dialog">
+      <button class="btn btn-primary" @click="addFeedback">Submit</button>
+      <button class="btn">Close</button>
+    </form>
+  </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
 
 <!-- Prompt Messages Container - Modify the height according to your need -->
 <div class="flex h-full min-h-[90vh] bg-base-200/50 w-full lg:px-24 lg:py-6 flex-col">
@@ -280,7 +331,7 @@ watch(messageInput, () => {
             ></path>
           </svg>
         </button>
-        <button class="hover:text-blue-600" type="button">
+        <button class="hover:text-blue-600" type="button" @click="editMessage = message" onclick="feedback.showModal()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5"
@@ -367,7 +418,6 @@ watch(messageInput, () => {
         @click="forceStop"
         v-else
       >
-        <!-- stop，停止的图标，使用daisyui mask -->
         <div class="mask mask-square bg-slate-200 h-5 w-5"></div>
         <span class="sr-only">Force Stop</span>
       </button>
